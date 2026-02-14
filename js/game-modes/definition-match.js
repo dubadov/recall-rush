@@ -18,7 +18,6 @@ RR.GameModes.DefinitionMatch = (function () {
     wordsCorrect: 0,
     roundIndex: 0,
     currentChallenge: null,
-    difficulty: 3,
     timerDuration: 10,
     timerRemaining: 10,
     timerInterval: null,
@@ -28,12 +27,12 @@ RR.GameModes.DefinitionMatch = (function () {
   };
 
   const $ = (id) => document.getElementById(id);
+  const t = () => RR.i18n.t.bind(RR.i18n); // lazy reference
 
   function init() {}
 
   async function start() {
     const settings = RR.Storage.getSettings();
-    const diff = settings.difficulty;
     state = {
       active: true,
       score: 0,
@@ -43,9 +42,8 @@ RR.GameModes.DefinitionMatch = (function () {
       wordsCorrect: 0,
       roundIndex: 0,
       currentChallenge: null,
-      difficulty: diff,
-      timerDuration: 10,
-      timerRemaining: 10,
+      timerDuration: settings.timerDuration,
+      timerRemaining: settings.timerDuration,
       timerInterval: null,
       roundStartTime: 0,
       totalResponseTime: 0,
@@ -55,7 +53,7 @@ RR.GameModes.DefinitionMatch = (function () {
     RR.Vocabulary.resetUsedIndices();
 
     // UI setup - hide transcript (no speech), show answer grid, hide timer (no time pressure)
-    $('game-mode-title').textContent = 'Definition Match';
+    $('game-mode-title').textContent = RR.i18n.t('definitionMatchTitle');
     $('game-score').textContent = '0';
     $('game-streak').textContent = '0';
     $('transcript-bar').style.display = 'none';
@@ -85,7 +83,7 @@ RR.GameModes.DefinitionMatch = (function () {
       return;
     }
 
-    state.currentChallenge = RR.Vocabulary.getDefinitionChallenge(state.difficulty);
+    state.currentChallenge = RR.Vocabulary.getDefinitionChallenge();
     state.roundIndex++;
     state.answered = false;
 
@@ -97,8 +95,8 @@ RR.GameModes.DefinitionMatch = (function () {
 
     // Show the word
     $('word-main').textContent = state.currentChallenge.word.toUpperCase();
-    $('word-definition').textContent = 'Pick the correct definition:';
-    $('word-example').textContent = `Round ${state.roundIndex} of ${ROUND_COUNT}`;
+    $('word-definition').textContent = RR.i18n.t('pickCorrectDef');
+    $('word-example').textContent = RR.i18n.t('roundOf', { current: state.roundIndex, total: ROUND_COUNT });
 
     // Populate answer buttons
     _clearAnswerStyles();
@@ -273,8 +271,7 @@ RR.GameModes.DefinitionMatch = (function () {
     if (success) {
       icon.textContent = '\u2713';
       icon.style.color = 'var(--success)';
-      const messages = ['Nice!', 'Correct!', 'Spot on!', 'Nailed it!', 'Sharp!', 'Well done!'];
-      text.textContent = messages[Math.floor(Math.random() * messages.length)];
+      text.textContent = RR.i18n.tRandom('successDef');
       pts.textContent = '+' + points;
       pts.className = 'result-points';
       if (timeMs && timeMs < RR.Progress.SPEED_BONUS_THRESHOLD) {
@@ -283,8 +280,8 @@ RR.GameModes.DefinitionMatch = (function () {
     } else {
       icon.textContent = '\u2717';
       icon.style.color = 'var(--danger)';
-      text.textContent = 'Not quite!';
-      pts.textContent = 'The answer was: ' + (state.currentChallenge ? state.currentChallenge.correctDefinition : '');
+      text.textContent = RR.i18n.t('notQuite');
+      pts.textContent = RR.i18n.t('answerWas') + (state.currentChallenge ? state.currentChallenge.correctDefinition : '');
       pts.className = 'result-points negative';
     }
 

@@ -19,7 +19,6 @@ RR.GameModes.RecallChallenge = (function () {
     wordsCorrect: 0,
     roundIndex: 0,
     currentChallenge: null,
-    difficulty: 3,
     timerDuration: 10,
     timerRemaining: 10,
     timerInterval: null,
@@ -35,8 +34,6 @@ RR.GameModes.RecallChallenge = (function () {
 
   async function start() {
     const settings = RR.Storage.getSettings();
-    const diff = settings.difficulty;
-    const timer = RR.Vocabulary.getTimerForDifficulty(diff);
     state = {
       active: true,
       score: 0,
@@ -46,9 +43,8 @@ RR.GameModes.RecallChallenge = (function () {
       wordsCorrect: 0,
       roundIndex: 0,
       currentChallenge: null,
-      difficulty: diff,
-      timerDuration: timer,
-      timerRemaining: timer,
+      timerDuration: settings.timerDuration,
+      timerRemaining: settings.timerDuration,
       timerInterval: null,
       roundStartTime: 0,
       totalResponseTime: 0,
@@ -57,7 +53,7 @@ RR.GameModes.RecallChallenge = (function () {
     };
 
     // UI setup - speech mode, no answer grid
-    $('game-mode-title').textContent = 'Recall Challenge';
+    $('game-mode-title').textContent = RR.i18n.t('recallChallengeTitle');
     $('game-score').textContent = '0';
     $('game-streak').textContent = '0';
     $('transcript-bar').style.display = '';
@@ -85,7 +81,7 @@ RR.GameModes.RecallChallenge = (function () {
     let challenge;
     let attempts = 0;
     do {
-      challenge = RR.Vocabulary.getRecallChallenge(state.difficulty);
+      challenge = RR.Vocabulary.getRecallChallenge();
       attempts++;
     } while (state.usedWords.includes(challenge.word) && attempts < 50);
 
@@ -105,8 +101,8 @@ RR.GameModes.RecallChallenge = (function () {
     $('word-main').style.fontSize = '';
     $('word-main').style.lineHeight = '';
     $('word-definition').textContent = challenge.definition;
-    $('word-example').textContent = `Round ${state.roundIndex} of ${ROUND_COUNT} \u2022 Say the word!`;
-    $('transcript-text').textContent = 'Listening...';
+    $('word-example').textContent = RR.i18n.t('roundOfSay', { current: state.roundIndex, total: ROUND_COUNT });
+    $('transcript-text').textContent = RR.i18n.t('listening');
     $('transcript-text').classList.remove('highlight');
 
     // Set speech target
@@ -248,7 +244,10 @@ RR.GameModes.RecallChallenge = (function () {
 
     const word = state.currentChallenge.word;
     $('word-main').textContent = word.charAt(0).toUpperCase() + '_ '.repeat(word.length - 1).trim();
-    $('word-example').textContent = `Hint: starts with "${word.substring(0, 2).toUpperCase()}..." (${word.length} letters)`;
+    $('word-example').textContent = RR.i18n.t('hintStartsWithLetters', {
+      letters: word.substring(0, 2).toUpperCase(),
+      count: word.length,
+    });
     $('word-example').style.color = 'var(--warning)';
 
     setTimeout(() => {
@@ -265,8 +264,7 @@ RR.GameModes.RecallChallenge = (function () {
     if (success) {
       icon.textContent = '\u2713';
       icon.style.color = 'var(--success)';
-      const messages = ['Great recall!', 'You knew it!', 'Sharp memory!', 'Impressive!', 'Nailed it!'];
-      text.textContent = messages[Math.floor(Math.random() * messages.length)];
+      text.textContent = RR.i18n.tRandom('successRecall');
       pts.textContent = '+' + points;
       pts.className = 'result-points';
       if (timeMs && timeMs < RR.Progress.SPEED_BONUS_THRESHOLD) {
@@ -275,8 +273,8 @@ RR.GameModes.RecallChallenge = (function () {
     } else {
       icon.textContent = '\u2717';
       icon.style.color = 'var(--danger)';
-      text.textContent = "Time's up!";
-      pts.textContent = 'The word was: ' + (state.currentChallenge ? state.currentChallenge.word : '');
+      text.textContent = RR.i18n.t('timesUp');
+      pts.textContent = RR.i18n.t('wordWas') + (state.currentChallenge ? state.currentChallenge.word : '');
       pts.className = 'result-points negative';
     }
 

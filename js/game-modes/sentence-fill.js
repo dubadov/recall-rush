@@ -9,6 +9,7 @@ RR.GameModes = RR.GameModes || {};
 RR.GameModes.SentenceFill = (function () {
   const MODE_ID = 'sentence-fill';
   const ROUND_COUNT = 10;
+  const TIMER_REDUCTION = 0.4; // Use 60% of normal timer for pressure
 
   let state = {
     active: false,
@@ -19,9 +20,8 @@ RR.GameModes.SentenceFill = (function () {
     wordsCorrect: 0,
     roundIndex: 0,
     currentChallenge: null,
-    difficulty: 3,
-    timerDuration: 10,
-    timerRemaining: 10,
+    timerDuration: 6,
+    timerRemaining: 6,
     timerInterval: null,
     roundStartTime: 0,
     totalResponseTime: 0,
@@ -33,8 +33,8 @@ RR.GameModes.SentenceFill = (function () {
 
   async function start() {
     const settings = RR.Storage.getSettings();
-    const diff = settings.difficulty;
-    const timer = RR.Vocabulary.getTimerForDifficulty(diff);
+    // Tight timer: reduce the user's setting for pressure
+    const tightTimer = Math.max(5, Math.round(settings.timerDuration * (1 - TIMER_REDUCTION)));
 
     state = {
       active: true,
@@ -45,9 +45,8 @@ RR.GameModes.SentenceFill = (function () {
       wordsCorrect: 0,
       roundIndex: 0,
       currentChallenge: null,
-      difficulty: diff,
-      timerDuration: timer,
-      timerRemaining: timer,
+      timerDuration: tightTimer,
+      timerRemaining: tightTimer,
       timerInterval: null,
       roundStartTime: 0,
       totalResponseTime: 0,
@@ -56,7 +55,7 @@ RR.GameModes.SentenceFill = (function () {
     RR.Vocabulary.resetUsedIndices();
 
     // UI setup - show answer grid as display-only (words to read), show transcript
-    $('game-mode-title').textContent = 'Sentence Fill';
+    $('game-mode-title').textContent = RR.i18n.t('sentenceFillTitle');
     $('game-score').textContent = '0';
     $('game-streak').textContent = '0';
     $('transcript-bar').style.display = '';
@@ -84,7 +83,7 @@ RR.GameModes.SentenceFill = (function () {
       return;
     }
 
-    state.currentChallenge = RR.Vocabulary.getSentenceChallenge(state.difficulty);
+    state.currentChallenge = RR.Vocabulary.getSentenceChallenge();
     state.roundIndex++;
 
     // Animate word card
@@ -98,9 +97,9 @@ RR.GameModes.SentenceFill = (function () {
     $('word-main').style.fontSize = '1.1rem';
     $('word-main').style.lineHeight = '1.5';
     $('word-main').textContent = state.currentChallenge.sentence;
-    $('word-definition').textContent = 'Say the word that fits best!';
-    $('word-example').textContent = `Round ${state.roundIndex} of ${ROUND_COUNT}`;
-    $('transcript-text').textContent = 'Listening...';
+    $('word-definition').textContent = RR.i18n.t('sayWordFits');
+    $('word-example').textContent = RR.i18n.t('roundOf', { current: state.roundIndex, total: ROUND_COUNT });
+    $('transcript-text').textContent = RR.i18n.t('listening');
     $('transcript-text').classList.remove('highlight');
 
     // Show the 4 word options as display-only
@@ -271,7 +270,7 @@ RR.GameModes.SentenceFill = (function () {
   function hint() {
     if (!state.active || !state.currentChallenge) return;
     const word = state.currentChallenge.correctWord;
-    $('word-example').textContent = `Hint: starts with "${word.charAt(0).toUpperCase()}..."`;
+    $('word-example').textContent = RR.i18n.t('hintStartsWith', { letter: word.charAt(0).toUpperCase() });
     $('word-example').style.color = 'var(--warning)';
     setTimeout(() => { if ($('word-example')) $('word-example').style.color = ''; }, 3000);
   }
@@ -285,8 +284,7 @@ RR.GameModes.SentenceFill = (function () {
     if (success) {
       icon.textContent = '\u2713';
       icon.style.color = 'var(--success)';
-      const messages = ['Perfect fit!', 'Right word!', 'Nailed it!', 'Exactly!', 'Spot on!', 'Precise!'];
-      text.textContent = messages[Math.floor(Math.random() * messages.length)];
+      text.textContent = RR.i18n.tRandom('successSentence');
       pts.textContent = '+' + points;
       pts.className = 'result-points';
       if (timeMs && timeMs < RR.Progress.SPEED_BONUS_THRESHOLD) {
@@ -295,8 +293,8 @@ RR.GameModes.SentenceFill = (function () {
     } else {
       icon.textContent = '\u2717';
       icon.style.color = 'var(--danger)';
-      text.textContent = "Time's up!";
-      pts.textContent = 'The word was: ' + (state.currentChallenge ? state.currentChallenge.correctWord : '');
+      text.textContent = RR.i18n.t('timesUp');
+      pts.textContent = RR.i18n.t('wordWas') + (state.currentChallenge ? state.currentChallenge.correctWord : '');
       pts.className = 'result-points negative';
     }
 

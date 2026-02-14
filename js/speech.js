@@ -13,6 +13,7 @@ RR.Speech = (function () {
   let targetWord = '';
   let targetSynonyms = [];   // For synonym sprint mode
   let fullTranscript = '';
+  let _currentLang = 'en-US';
 
   // Check if Web Speech API is available
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -27,7 +28,7 @@ RR.Speech = (function () {
     recognition = new SpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.lang = 'en-US';
+    recognition.lang = _currentLang;
     recognition.maxAlternatives = 3;
 
     recognition.onresult = function (event) {
@@ -160,6 +161,13 @@ RR.Speech = (function () {
     return fullTranscript;
   }
 
+  function setLanguage(lang) {
+    _currentLang = lang || 'en-US';
+    if (recognition) {
+      recognition.lang = _currentLang;
+    }
+  }
+
   return {
     init,
     start,
@@ -167,6 +175,7 @@ RR.Speech = (function () {
     setTarget,
     clearTarget,
     getTranscript,
+    setLanguage,
     get isSupported() { return isSupported; },
     get isListening() { return isListening; },
     set onResult(fn) { onResult = fn; },

@@ -16,15 +16,6 @@ RR.App = (function () {
     'word-upgrade': RR.GameModes.WordUpgrade,
   };
 
-  const DIFF_NAMES = { 1: 'Beginner', 2: 'Easy', 3: 'Medium', 4: 'Hard', 5: 'Master' };
-  const DIFF_INFOS = {
-    1: 'Common words \u2022 20s timer',
-    2: 'Simple words \u2022 15s timer',
-    3: 'Balanced words \u2022 10s timer',
-    4: 'Advanced words \u2022 7s timer',
-    5: 'Expert words \u2022 5s timer',
-  };
-
   const $ = (id) => document.getElementById(id);
 
   // ---- Screen Navigation ----
@@ -44,6 +35,9 @@ RR.App = (function () {
 
   // ---- Initialize ----
   function init() {
+    // Initialize i18n first
+    RR.i18n.init();
+
     // Check if setup is complete
     if (RR.Storage.get('setupComplete')) {
       showScreen('menu');
@@ -54,7 +48,6 @@ RR.App = (function () {
 
     _bindEvents();
     _initSpeech();
-    _syncDifficultyUI();
   }
 
   function _initSpeech() {
@@ -67,7 +60,7 @@ RR.App = (function () {
     RR.Speech.onResult = function (transcript, isFinal) {
       const el = $('transcript-text');
       if (el) {
-        el.textContent = transcript || 'Listening...';
+        el.textContent = transcript || RR.i18n.t('listening');
       }
     };
 
@@ -76,34 +69,6 @@ RR.App = (function () {
         activeGame.onWordDetected(word);
       }
     };
-  }
-
-  // ---- Difficulty UI sync ----
-  function _syncDifficultyUI() {
-    const settings = RR.Storage.getSettings();
-    const level = settings.difficulty;
-    _updateDifficultySelector(level);
-  }
-
-  function _updateDifficultySelector(level) {
-    // Menu selector buttons
-    document.querySelectorAll('.diff-btn').forEach(btn => {
-      btn.classList.toggle('active', parseInt(btn.dataset.level) === level);
-    });
-    const nameEl = $('diff-level-name');
-    if (nameEl) nameEl.textContent = DIFF_NAMES[level] || 'Medium';
-    const infoEl = $('diff-info');
-    if (infoEl) infoEl.textContent = DIFF_INFOS[level] || '';
-
-    // Settings dropdown
-    const settingsDiff = $('setting-difficulty');
-    if (settingsDiff) settingsDiff.value = level;
-  }
-
-  function _setDifficulty(level) {
-    level = Math.max(1, Math.min(5, parseInt(level) || 3));
-    RR.Storage.set('difficulty', level);
-    _updateDifficultySelector(level);
   }
 
   // ---- Event Binding ----
@@ -115,12 +80,8 @@ RR.App = (function () {
       if (e.key === 'Enter') _onSaveApiKey();
     });
 
-    // Difficulty selector on menu
-    document.querySelectorAll('.diff-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        _setDifficulty(parseInt(btn.dataset.level));
-      });
-    });
+    // Language toggle
+    $('lang-toggle').addEventListener('click', _onToggleLanguage);
 
     // Mode cards
     document.querySelectorAll('.mode-card').forEach(card => {
@@ -163,7 +124,6 @@ RR.App = (function () {
         if (target === 'menu') {
           showScreen('menu');
           _updateMenuStats();
-          _syncDifficultyUI();
         } else if (target === 'stats') {
           _updateStatsScreen();
           showScreen('stats');
@@ -185,39 +145,45 @@ RR.App = (function () {
       _saveSettingsFromUI();
       showScreen('menu');
       _updateMenuStats();
-      _syncDifficultyUI();
     });
     $('save-settings-api').addEventListener('click', () => {
       const key = $('settings-api-key').value.trim();
       if (key) {
         RR.Storage.set('apiKey', key);
-        $('save-settings-api').textContent = 'Saved!';
-        setTimeout(() => { $('save-settings-api').textContent = 'Save Key'; }, 1500);
+        $('save-settings-api').textContent = RR.i18n.t('saved');
+        setTimeout(() => { $('save-settings-api').textContent = RR.i18n.t('saveKey'); }, 1500);
       }
     });
     $('reset-progress').addEventListener('click', () => {
-      if (confirm('Are you sure? This will reset all your progress, XP, and statistics.')) {
+      if (confirm(RR.i18n.t('confirmReset'))) {
         const apiKey = RR.Storage.get('apiKey');
-        const difficulty = RR.Storage.get('difficulty');
         RR.Storage.resetAll();
         RR.Storage.set('apiKey', apiKey);
-        RR.Storage.set('difficulty', difficulty);
         RR.Storage.set('setupComplete', true);
         _updateMenuStats();
-        alert('Progress has been reset.');
+        alert(RR.i18n.t('progressReset'));
       }
     });
 
     // Settings auto-save on change
-    ['setting-difficulty', 'setting-category'].forEach(id => {
-      const el = $(id);
-      if (el) el.addEventListener('change', _saveSettingsFromUI);
+    ['setting-timer', 'setting-difficulty', 'setting-category'].forEach(id => {
+      $(id).addEventListener('change', _saveSettingsFromUI);
     });
 
     // Daily challenge
     $('start-daily').addEventListener('click', () => {
       _onModeSelect('definition-match');
     });
+  }
+
+  // ---- Language Toggle ----
+  function _onToggleLanguage() {
+    const current = RR.i18n.getLang();
+    const next = current === 'en' ? 'he' : 'en';
+    RR.i18n.setLanguage(next);
+
+    // Clear cached vocabulary when switching language so correct bank is used
+    RR.Storage.set('cachedVocabulary', []);
   }
 
   // ---- Setup ----
@@ -229,21 +195,19 @@ RR.App = (function () {
     RR.Storage.set('setupComplete', true);
     showScreen('menu');
     _updateMenuStats();
-    _syncDifficultyUI();
   }
 
   function _onSkipApiKey() {
     RR.Storage.set('setupComplete', true);
     showScreen('menu');
     _updateMenuStats();
-    _syncDifficultyUI();
   }
 
   // ---- Game Lifecycle ----
   async function _onModeSelect(modeId) {
     const GameMode = GAME_MODES[modeId];
     if (!GameMode) {
-      alert('This game mode is coming soon!');
+      alert(RR.i18n.t('comingSoon'));
       return;
     }
 
@@ -282,7 +246,7 @@ RR.App = (function () {
         } else {
           number.classList.remove('anim-scale-pop');
           void number.offsetWidth;
-          number.textContent = 'GO!';
+          number.textContent = RR.i18n.t('countdown_go');
           number.classList.add('anim-scale-pop');
           RR.Sounds.countdownGo();
 
@@ -303,7 +267,6 @@ RR.App = (function () {
     activeGame = null;
     showScreen('menu');
     _updateMenuStats();
-    _syncDifficultyUI();
   }
 
   function _onPlayAgain() {
@@ -379,12 +342,12 @@ RR.App = (function () {
     const mastered = stats.masteredWords;
 
     if (mastered.length === 0) {
-      list.innerHTML = '<p class="empty-state">No words mastered yet. Keep practicing!</p>';
+      list.innerHTML = '<p class="empty-state">' + RR.i18n.t('noWordsMastered') + '</p>';
     } else {
       list.innerHTML = mastered.map(word => {
         const history = RR.Storage.get('wordHistory') || {};
         const h = history[word];
-        const avgTime = h ? ((h.totalTime / h.attempts) / 1000).toFixed(1) + 's avg' : '';
+        const avgTime = h ? ((h.totalTime / h.attempts) / 1000).toFixed(1) + RR.i18n.t('sAvg') : '';
         return `
           <div class="mastered-item">
             <span class="mastered-word">${word}</span>
@@ -398,19 +361,18 @@ RR.App = (function () {
   // ---- Settings ----
   function _loadSettings() {
     const settings = RR.Storage.getSettings();
+    $('setting-timer').value = settings.timerDuration;
     $('setting-difficulty').value = settings.difficulty;
     $('setting-category').value = settings.category;
     $('settings-api-key').value = settings.apiKey || '';
   }
 
   function _saveSettingsFromUI() {
-    const newDifficulty = parseInt($('setting-difficulty').value) || 3;
     RR.Storage.saveSettings({
-      difficulty: newDifficulty,
+      timerDuration: parseInt($('setting-timer').value),
+      difficulty: $('setting-difficulty').value,
       category: $('setting-category').value,
     });
-    // Also sync the menu selector
-    _updateDifficultySelector(newDifficulty);
   }
 
   return {

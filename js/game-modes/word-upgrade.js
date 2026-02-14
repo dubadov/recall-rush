@@ -19,7 +19,6 @@ RR.GameModes.WordUpgrade = (function () {
     wordsCorrect: 0,
     roundIndex: 0,
     currentChallenge: null,
-    difficulty: 3,
     timerDuration: 10,
     timerRemaining: 10,
     timerInterval: null,
@@ -33,8 +32,6 @@ RR.GameModes.WordUpgrade = (function () {
 
   async function start() {
     const settings = RR.Storage.getSettings();
-    const diff = settings.difficulty;
-    const timer = RR.Vocabulary.getTimerForDifficulty(diff);
     state = {
       active: true,
       score: 0,
@@ -44,9 +41,8 @@ RR.GameModes.WordUpgrade = (function () {
       wordsCorrect: 0,
       roundIndex: 0,
       currentChallenge: null,
-      difficulty: diff,
-      timerDuration: timer,
-      timerRemaining: timer,
+      timerDuration: settings.timerDuration,
+      timerRemaining: settings.timerDuration,
       timerInterval: null,
       roundStartTime: 0,
       totalResponseTime: 0,
@@ -55,7 +51,7 @@ RR.GameModes.WordUpgrade = (function () {
     RR.Vocabulary.resetUsedIndices();
 
     // UI setup - speech mode, no answer grid
-    $('game-mode-title').textContent = 'Word Upgrade';
+    $('game-mode-title').textContent = RR.i18n.t('wordUpgradeTitle');
     $('game-score').textContent = '0';
     $('game-streak').textContent = '0';
     $('transcript-bar').style.display = '';
@@ -79,7 +75,7 @@ RR.GameModes.WordUpgrade = (function () {
       return;
     }
 
-    state.currentChallenge = RR.Vocabulary.getUpgradeChallenge(state.difficulty);
+    state.currentChallenge = RR.Vocabulary.getUpgradeChallenge();
     state.roundIndex++;
 
     // Animate word card
@@ -92,9 +88,9 @@ RR.GameModes.WordUpgrade = (function () {
     $('word-main').textContent = state.currentChallenge.commonWord.toUpperCase();
     $('word-main').style.fontSize = '';
     $('word-main').style.lineHeight = '';
-    $('word-definition').textContent = 'Say a more elevated word!';
-    $('word-example').textContent = `Round ${state.roundIndex} of ${ROUND_COUNT}`;
-    $('transcript-text').textContent = 'Listening...';
+    $('word-definition').textContent = RR.i18n.t('sayElevatedWord');
+    $('word-example').textContent = RR.i18n.t('roundOf', { current: state.roundIndex, total: ROUND_COUNT });
+    $('transcript-text').textContent = RR.i18n.t('listening');
     $('transcript-text').classList.remove('highlight');
 
     // Set speech targets to all valid upgrades
@@ -225,7 +221,7 @@ RR.GameModes.WordUpgrade = (function () {
     const upgrades = state.currentChallenge.acceptedUpgrades;
     // Show first letter of each accepted word
     const hints = upgrades.slice(0, 4).map(s => s.charAt(0).toUpperCase() + '...').join(', ');
-    $('word-example').textContent = `Hints: ${hints}`;
+    $('word-example').textContent = RR.i18n.t('hintsLabel') + hints;
     $('word-example').style.color = 'var(--warning)';
     setTimeout(() => { if ($('word-example')) $('word-example').style.color = ''; }, 3000);
   }
@@ -239,14 +235,14 @@ RR.GameModes.WordUpgrade = (function () {
     if (success) {
       icon.textContent = '\u2713';
       icon.style.color = 'var(--success)';
-      text.textContent = `"${extra}" \u2014 upgraded!`;
+      text.textContent = RR.i18n.t('upgraded', { word: extra });
       pts.textContent = '+' + points;
       pts.className = 'result-points';
     } else {
       icon.textContent = '\u2717';
       icon.style.color = 'var(--danger)';
-      text.textContent = "Time's up!";
-      pts.textContent = extra ? 'Try: ' + extra : '';
+      text.textContent = RR.i18n.t('timesUp');
+      pts.textContent = extra ? RR.i18n.t('tryWords') + extra : '';
       pts.className = 'result-points negative';
     }
 
