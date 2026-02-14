@@ -106,6 +106,10 @@ RR.App = (function () {
       showScreen('menu');
       _updateMenuStats();
     });
+    $('btn-continue-sentence').addEventListener('click', () => {
+      $('btn-continue-sentence').style.display = 'none';
+      _onModeSelect('sentence-fill');
+    });
 
     // Navigation
     document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -265,6 +269,13 @@ RR.App = (function () {
     $('go-accuracy').textContent = result.accuracy + '%';
     $('go-best-streak').textContent = result.bestStreak;
     $('go-xp-earned').textContent = '+' + result.xpEarned;
+
+    // Show "Continue to Sentence Fill" button only after Definition Match
+    if (result.mode === 'definition-match') {
+      $('btn-continue-sentence').style.display = '';
+    } else {
+      $('btn-continue-sentence').style.display = 'none';
+    }
 
     // Level up notification
     if (result.leveledUp) {

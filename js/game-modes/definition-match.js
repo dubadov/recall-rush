@@ -51,7 +51,7 @@ RR.GameModes.DefinitionMatch = (function () {
 
     RR.Vocabulary.resetUsedIndices();
 
-    // UI setup - hide transcript (no speech), show answer grid
+    // UI setup - hide transcript (no speech), show answer grid, hide timer (no time pressure)
     $('game-mode-title').textContent = 'Definition Match';
     $('game-score').textContent = '0';
     $('game-streak').textContent = '0';
@@ -59,6 +59,7 @@ RR.GameModes.DefinitionMatch = (function () {
     $('answer-grid').style.display = 'grid';
     $('answer-grid').classList.remove('display-only');
     $('bomb-container').style.display = 'none';
+    document.querySelector('.timer-wrap').style.display = 'none';
 
     _nextRound();
   }
@@ -69,6 +70,7 @@ RR.GameModes.DefinitionMatch = (function () {
     // Restore UI
     $('transcript-bar').style.display = '';
     $('answer-grid').style.display = 'none';
+    document.querySelector('.timer-wrap').style.display = '';
     _clearAnswerStyles();
   }
 
@@ -110,10 +112,8 @@ RR.GameModes.DefinitionMatch = (function () {
     void grid.offsetWidth;
     grid.classList.add('anim-grid-enter');
 
-    // Start timer
-    state.timerRemaining = state.timerDuration;
+    // No timer - just track when the round started for stats
     state.roundStartTime = Date.now();
-    _startTimer();
   }
 
   function onAnswerSelected(index) {
@@ -244,35 +244,7 @@ RR.GameModes.DefinitionMatch = (function () {
   }
 
   function _onTimeUp() {
-    if (!state.active || state.answered) return;
-    state.answered = true;
-    _clearTimer();
-
-    state.streak = 0;
-    state.wordsCompleted++;
-
-    // Show correct answer
-    for (let i = 0; i < 4; i++) {
-      const btn = $('answer-btn-' + i);
-      if (btn.dataset.correct === '1') {
-        btn.classList.add('correct');
-      }
-      btn.classList.add('disabled');
-    }
-
-    if (state.currentChallenge) {
-      RR.Progress.recordWordAttempt(state.currentChallenge.word, false, state.timerDuration * 1000);
-    }
-
-    $('game-streak').textContent = '0';
-
-    _showResult(false, 0);
-    RR.Sounds.fail();
-
-    setTimeout(() => {
-      _hideResult();
-      _nextRound();
-    }, 1800);
+    // No-op: Definition Match has no timer
   }
 
   function skip() {
@@ -308,7 +280,7 @@ RR.GameModes.DefinitionMatch = (function () {
     } else {
       icon.textContent = '\u2717';
       icon.style.color = 'var(--danger)';
-      text.textContent = "Time's up!";
+      text.textContent = 'Not quite!';
       pts.textContent = 'The answer was: ' + (state.currentChallenge ? state.currentChallenge.correctDefinition : '');
       pts.className = 'result-points negative';
     }
@@ -330,6 +302,7 @@ RR.GameModes.DefinitionMatch = (function () {
     // Restore UI
     $('transcript-bar').style.display = '';
     $('answer-grid').style.display = 'none';
+    document.querySelector('.timer-wrap').style.display = '';
 
     const xpEarned = Math.round(state.score * 0.5);
     const xpResult = RR.Progress.addXP(xpEarned);
