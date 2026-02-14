@@ -101,7 +101,7 @@ a:hover {
 .screen.active {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(0);
+  transform: none;
 }
 
 .screen-content {
