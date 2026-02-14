@@ -9,8 +9,6 @@ RR.GameModes = RR.GameModes || {};
 RR.GameModes.SentenceFill = (function () {
   const MODE_ID = 'sentence-fill';
   const ROUND_COUNT = 10;
-  const TIMER_REDUCTION = 0.4; // Use 60% of normal timer for pressure
-
   let state = {
     active: false,
     score: 0,
@@ -20,8 +18,8 @@ RR.GameModes.SentenceFill = (function () {
     wordsCorrect: 0,
     roundIndex: 0,
     currentChallenge: null,
-    timerDuration: 6,
-    timerRemaining: 6,
+    timerDuration: 10,
+    timerRemaining: 10,
     timerInterval: null,
     roundStartTime: 0,
     totalResponseTime: 0,
@@ -33,8 +31,6 @@ RR.GameModes.SentenceFill = (function () {
 
   async function start() {
     const settings = RR.Storage.getSettings();
-    // Tight timer: reduce the user's setting for pressure
-    const tightTimer = Math.max(5, Math.round(settings.timerDuration * (1 - TIMER_REDUCTION)));
 
     state = {
       active: true,
@@ -45,8 +41,8 @@ RR.GameModes.SentenceFill = (function () {
       wordsCorrect: 0,
       roundIndex: 0,
       currentChallenge: null,
-      timerDuration: tightTimer,
-      timerRemaining: tightTimer,
+      timerDuration: settings.timerDuration,
+      timerRemaining: settings.timerDuration,
       timerInterval: null,
       roundStartTime: 0,
       totalResponseTime: 0,
