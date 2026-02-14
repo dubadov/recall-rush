@@ -59,21 +59,6 @@ RR.App = (function () {
       if (el) {
         el.textContent = transcript || 'Listening...';
       }
-
-      // Update speaking indicator
-      const indicator = $('speaking-indicator');
-      const glow = $('video-glow');
-      if (transcript && transcript.length > 0) {
-        if (indicator) indicator.classList.add('active');
-        if (glow) glow.classList.add('speaking');
-      }
-
-      // Clear speaking state after brief pause
-      clearTimeout(_speakingTimeout);
-      _speakingTimeout = setTimeout(() => {
-        if (indicator) indicator.classList.remove('active');
-        if (glow) glow.classList.remove('speaking');
-      }, 800);
     };
 
     RR.Speech.onWordDetected = function (word) {
@@ -82,8 +67,6 @@ RR.App = (function () {
       }
     };
   }
-
-  let _speakingTimeout = null;
 
   // ---- Event Binding ----
   function _bindEvents() {
@@ -120,7 +103,6 @@ RR.App = (function () {
     // Game over
     $('btn-play-again').addEventListener('click', _onPlayAgain);
     $('btn-back-menu').addEventListener('click', () => {
-      RR.Video.stop();
       showScreen('menu');
       _updateMenuStats();
     });
@@ -215,12 +197,6 @@ RR.App = (function () {
     // Show game screen
     showScreen('game');
 
-    // Start camera
-    const cameraOk = await RR.Video.start('video-feed');
-    if (!cameraOk) {
-      alert('Camera access is needed for the full experience. The game will still work without it.');
-    }
-
     // Show countdown
     await _showCountdown();
 
@@ -267,7 +243,6 @@ RR.App = (function () {
 
   function _onGameBack() {
     if (activeGame && activeGame.stop) activeGame.stop();
-    RR.Video.stop();
     RR.Speech.stop();
     activeGame = null;
     showScreen('menu');
@@ -281,8 +256,7 @@ RR.App = (function () {
   }
 
   function showGameOver(result) {
-    // Stop video and speech
-    RR.Video.stop();
+    // Stop speech
     RR.Speech.stop();
 
     // Populate game over screen

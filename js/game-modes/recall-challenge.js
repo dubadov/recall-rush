@@ -147,10 +147,6 @@ RR.GameModes.RecallChallenge = (function () {
       setTimeout(() => streakEl.classList.remove('anim-streak'), 300);
     }
 
-    const glow = $('video-glow');
-    glow.classList.add('success');
-    setTimeout(() => glow.classList.remove('success'), 1000);
-
     _showResult(true, points, responseTime);
     RR.Sounds.success();
 
@@ -222,10 +218,6 @@ RR.GameModes.RecallChallenge = (function () {
     }
 
     $('game-streak').textContent = '0';
-
-    const glow = $('video-glow');
-    glow.classList.add('fail');
-    setTimeout(() => glow.classList.remove('fail'), 1000);
 
     _showResult(false, 0);
     RR.Sounds.fail();

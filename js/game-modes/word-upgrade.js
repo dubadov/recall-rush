@@ -130,10 +130,6 @@ RR.GameModes.WordUpgrade = (function () {
       setTimeout(() => streakEl.classList.remove('anim-streak'), 300);
     }
 
-    const glow = $('video-glow');
-    glow.classList.add('success');
-    setTimeout(() => glow.classList.remove('success'), 1000);
-
     _showResult(true, points, word);
     RR.Sounds.success();
 
@@ -199,10 +195,6 @@ RR.GameModes.WordUpgrade = (function () {
     state.wordsCompleted++;
 
     $('game-streak').textContent = '0';
-
-    const glow = $('video-glow');
-    glow.classList.add('fail');
-    setTimeout(() => glow.classList.remove('fail'), 1000);
 
     const synonymList = state.currentChallenge ? state.currentChallenge.acceptedUpgrades.slice(0, 3).join(', ') : '';
     _showResult(false, 0, synonymList);
