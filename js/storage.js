@@ -8,8 +8,7 @@ RR.Storage = (function () {
 
   const DEFAULTS = {
     apiKey: '',
-    timerDuration: 10,
-    difficulty: 'intermediate',
+    difficulty: 3,          // 1-5 numeric scale (was string, now numeric)
     category: 'general',
     speechEngine: 'webspeech',
     xp: 0,
@@ -70,12 +69,24 @@ RR.Storage = (function () {
     }
   }
 
+  // Backward-compat: map old string difficulty to numeric 1-5
+  const _DIFF_MAP = { beginner: 1, intermediate: 3, advanced: 4, expert: 5 };
+
+  function _migrateDifficulty(val) {
+    if (typeof val === 'string' && _DIFF_MAP[val] !== undefined) {
+      const num = _DIFF_MAP[val];
+      set('difficulty', num);
+      return num;
+    }
+    if (typeof val === 'number' && val >= 1 && val <= 5) return val;
+    return DEFAULTS.difficulty;
+  }
+
   // Get settings as an object
   function getSettings() {
     return {
       apiKey: get('apiKey'),
-      timerDuration: get('timerDuration'),
-      difficulty: get('difficulty'),
+      difficulty: _migrateDifficulty(get('difficulty')),
       category: get('category'),
       speechEngine: get('speechEngine'),
     };
