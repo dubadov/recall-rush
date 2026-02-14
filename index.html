@@ -61,70 +61,58 @@
         <div class="daily-banner glass-card" id="daily-challenge">
           <div class="daily-badge">DAILY</div>
           <div class="daily-info">
-            <p class="daily-text" id="daily-challenge-text">Complete 5 words in Speed Recall under 3s each</p>
+            <p class="daily-text" id="daily-challenge-text">Complete all 10 rounds in Definition Match</p>
           </div>
           <button class="btn btn-accent btn-sm" id="start-daily">Go</button>
         </div>
 
         <!-- Game Mode Cards -->
         <div class="mode-grid">
-          <div class="mode-card glass-card" data-mode="speed-recall">
-            <div class="mode-icon-wrap"><span class="mode-icon">&#9889;</span></div>
+          <div class="mode-card glass-card" data-mode="definition-match">
+            <div class="mode-icon-wrap"><span class="mode-icon">&#128218;</span></div>
             <div class="mode-info">
-              <h3>Speed Recall</h3>
-              <p>Say the word in a sentence before time runs out</p>
+              <h3>Definition Match</h3>
+              <p>Pick the correct definition before time runs out</p>
             </div>
             <div class="mode-meta">
               <span class="difficulty-dot dot-green"></span>
-              <span class="mode-best" id="best-speed-recall">--</span>
+              <span class="mode-best" id="best-definition-match">--</span>
             </div>
           </div>
 
-          <div class="mode-card glass-card" data-mode="word-bomb">
-            <div class="mode-icon-wrap"><span class="mode-icon">&#128163;</span></div>
+          <div class="mode-card glass-card" data-mode="sentence-fill">
+            <div class="mode-icon-wrap"><span class="mode-icon">&#128172;</span></div>
             <div class="mode-info">
-              <h3>Word Bomb</h3>
-              <p>Defuse the bomb by speaking the target word</p>
+              <h3>Sentence Fill</h3>
+              <p>Say the word that best completes the sentence</p>
             </div>
             <div class="mode-meta">
               <span class="difficulty-dot dot-yellow"></span>
-              <span class="mode-best" id="best-word-bomb">--</span>
+              <span class="mode-best" id="best-sentence-fill">--</span>
             </div>
           </div>
 
-          <div class="mode-card glass-card" data-mode="synonym-sprint">
-            <div class="mode-icon-wrap"><span class="mode-icon">&#127939;</span></div>
+          <div class="mode-card glass-card" data-mode="recall-challenge">
+            <div class="mode-icon-wrap"><span class="mode-icon">&#129504;</span></div>
             <div class="mode-info">
-              <h3>Synonym Sprint</h3>
-              <p>Rapid-fire sophisticated synonyms for common words</p>
+              <h3>Recall Challenge</h3>
+              <p>See the definition, say the word from memory</p>
             </div>
             <div class="mode-meta">
               <span class="difficulty-dot dot-orange"></span>
-              <span class="mode-best" id="best-synonym-sprint">--</span>
+              <span class="mode-best" id="best-recall-challenge">--</span>
             </div>
           </div>
 
-          <div class="mode-card glass-card" data-mode="context-roulette">
-            <div class="mode-icon-wrap"><span class="mode-icon">&#127919;</span></div>
+          <div class="mode-card glass-card" data-mode="word-upgrade">
+            <div class="mode-icon-wrap"><span class="mode-icon">&#11014;</span></div>
             <div class="mode-info">
-              <h3>Context Roulette</h3>
-              <p>Use the word in a random real-world scenario</p>
-            </div>
-            <div class="mode-meta">
-              <span class="difficulty-dot dot-yellow"></span>
-              <span class="mode-best" id="best-context">--</span>
-            </div>
-          </div>
-
-          <div class="mode-card glass-card" data-mode="improv-interview">
-            <div class="mode-icon-wrap"><span class="mode-icon">&#127908;</span></div>
-            <div class="mode-info">
-              <h3>Improv Interview</h3>
-              <p>Incorporate all target words in a scenario response</p>
+              <h3>Word Upgrade</h3>
+              <p>Replace the common word with a more elevated synonym</p>
             </div>
             <div class="mode-meta">
               <span class="difficulty-dot dot-red"></span>
-              <span class="mode-best" id="best-improv">--</span>
+              <span class="mode-best" id="best-word-upgrade">--</span>
             </div>
           </div>
         </div>
@@ -193,6 +181,14 @@
           <div class="word-divider"></div>
           <div class="word-definition" id="word-definition">present, appearing, or found everywhere</div>
           <div class="word-example" id="word-example">"Smartphones have become ubiquitous in modern society."</div>
+        </div>
+
+        <!-- Answer Grid (for Definition Match click + Sentence Fill display) -->
+        <div class="answer-grid" id="answer-grid" style="display:none;">
+          <button class="answer-btn glass-card" id="answer-btn-0" data-index="0"></button>
+          <button class="answer-btn glass-card" id="answer-btn-1" data-index="1"></button>
+          <button class="answer-btn glass-card" id="answer-btn-2" data-index="2"></button>
+          <button class="answer-btn glass-card" id="answer-btn-3" data-index="3"></button>
         </div>
 
         <!-- Transcript -->
@@ -415,9 +411,10 @@
   <script src="js/video.js"></script>
   <script src="js/vocabulary.js"></script>
   <script src="js/progress.js"></script>
-  <script src="js/game-modes/speed-recall.js"></script>
-  <script src="js/game-modes/word-bomb.js"></script>
-  <script src="js/game-modes/synonym-sprint.js"></script>
+  <script src="js/game-modes/definition-match.js"></script>
+  <script src="js/game-modes/sentence-fill.js"></script>
+  <script src="js/game-modes/recall-challenge.js"></script>
+  <script src="js/game-modes/word-upgrade.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

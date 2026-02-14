@@ -10,9 +10,10 @@ RR.App = (function () {
   let activeGame = null;
 
   const GAME_MODES = {
-    'speed-recall': RR.GameModes.SpeedRecall,
-    'word-bomb': RR.GameModes.WordBomb,
-    'synonym-sprint': RR.GameModes.SynonymSprint,
+    'definition-match': RR.GameModes.DefinitionMatch,
+    'sentence-fill': RR.GameModes.SentenceFill,
+    'recall-challenge': RR.GameModes.RecallChallenge,
+    'word-upgrade': RR.GameModes.WordUpgrade,
   };
 
   const $ = (id) => document.getElementById(id);
@@ -107,6 +108,15 @@ RR.App = (function () {
       if (activeGame && activeGame.hint) activeGame.hint();
     });
 
+    // Answer button clicks (for Definition Match)
+    for (let i = 0; i < 4; i++) {
+      $('answer-btn-' + i).addEventListener('click', () => {
+        if (activeGame && activeGame.onAnswerSelected) {
+          activeGame.onAnswerSelected(i);
+        }
+      });
+    }
+
     // Game over
     $('btn-play-again').addEventListener('click', _onPlayAgain);
     $('btn-back-menu').addEventListener('click', () => {
@@ -170,7 +180,7 @@ RR.App = (function () {
 
     // Daily challenge
     $('start-daily').addEventListener('click', () => {
-      _onModeSelect('speed-recall');
+      _onModeSelect('definition-match');
     });
   }
 
@@ -302,11 +312,10 @@ RR.App = (function () {
 
     // Best scores
     const bestScores = stats.bestScores;
-    _setBest('best-speed-recall', bestScores['speed-recall']);
-    _setBest('best-word-bomb', bestScores['word-bomb']);
-    _setBest('best-synonym-sprint', bestScores['synonym-sprint']);
-    _setBest('best-context', bestScores['context-roulette']);
-    _setBest('best-improv', bestScores['improv-interview']);
+    _setBest('best-definition-match', bestScores['definition-match']);
+    _setBest('best-sentence-fill', bestScores['sentence-fill']);
+    _setBest('best-recall-challenge', bestScores['recall-challenge']);
+    _setBest('best-word-upgrade', bestScores['word-upgrade']);
   }
 
   function _setBest(elementId, score) {

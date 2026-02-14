@@ -1,98 +1,145 @@
 /* ================================================
-   Vocabulary Module - Groq API + fallback word bank
+   Vocabulary Module - Word banks for all game modes
    ================================================ */
 window.RR = window.RR || {};
 
 RR.Vocabulary = (function () {
 
-  // ---- Hardcoded fallback word bank ----
-  const FALLBACK_WORDS = [
-    // BEGINNER
-    { word: 'Articulate', definition: 'Expressing oneself clearly and effectively', example: 'She was able to articulate her vision for the project clearly.', difficulty: 'beginner', category: 'general' },
-    { word: 'Diligent', definition: 'Showing careful and persistent effort', example: 'His diligent work ethic earned him the promotion.', difficulty: 'beginner', category: 'business' },
-    { word: 'Resilient', definition: 'Able to recover quickly from difficulties', example: 'The team proved resilient after the initial setback.', difficulty: 'beginner', category: 'general' },
-    { word: 'Versatile', definition: 'Able to adapt to many different functions or activities', example: 'She is a versatile employee who can handle any department.', difficulty: 'beginner', category: 'business' },
-    { word: 'Meticulous', definition: 'Showing great attention to detail', example: 'Her meticulous planning ensured the event ran smoothly.', difficulty: 'beginner', category: 'general' },
-    { word: 'Eloquent', definition: 'Fluent or persuasive in speaking or writing', example: 'The CEO gave an eloquent speech at the conference.', difficulty: 'beginner', category: 'general' },
-    { word: 'Pragmatic', definition: 'Dealing with things sensibly and realistically', example: 'We need a pragmatic approach to solve this budget issue.', difficulty: 'beginner', category: 'business' },
-    { word: 'Tenacious', definition: 'Holding firmly to something; persistent', example: 'Her tenacious attitude helped her overcome every obstacle.', difficulty: 'beginner', category: 'general' },
-    { word: 'Innovative', definition: 'Introducing new ideas or methods', example: 'The startup took an innovative approach to food delivery.', difficulty: 'beginner', category: 'business' },
-    { word: 'Substantial', definition: 'Of considerable importance, size, or worth', example: 'We saw substantial growth in the third quarter.', difficulty: 'beginner', category: 'business' },
-    { word: 'Comprehensive', definition: 'Including all or nearly all aspects of something', example: 'The report provides a comprehensive overview of the market.', difficulty: 'beginner', category: 'academic' },
-    { word: 'Conducive', definition: 'Making a situation or outcome likely or possible', example: 'The quiet office is conducive to deep focus work.', difficulty: 'beginner', category: 'general' },
-
-    // INTERMEDIATE
-    { word: 'Ubiquitous', definition: 'Present, appearing, or found everywhere', example: 'Smartphones have become ubiquitous in modern society.', difficulty: 'intermediate', category: 'general' },
-    { word: 'Paradigm', definition: 'A typical example or pattern of something; a model', example: 'This represents a paradigm shift in how we think about education.', difficulty: 'intermediate', category: 'academic' },
-    { word: 'Proliferate', definition: 'Increase rapidly in number; spread', example: 'Social media platforms have proliferated over the past decade.', difficulty: 'intermediate', category: 'general' },
-    { word: 'Exacerbate', definition: 'Make a problem or situation worse', example: 'The delay only served to exacerbate the existing tensions.', difficulty: 'intermediate', category: 'general' },
-    { word: 'Mitigate', definition: 'Make something less severe, serious, or painful', example: 'We implemented safeguards to mitigate the risk of data loss.', difficulty: 'intermediate', category: 'business' },
-    { word: 'Juxtapose', definition: 'Place close together for contrasting effect', example: 'The film juxtaposes wealth and poverty in a striking way.', difficulty: 'intermediate', category: 'creative' },
-    { word: 'Superfluous', definition: 'More than what is needed; unnecessary', example: 'We removed superfluous features to simplify the interface.', difficulty: 'intermediate', category: 'general' },
-    { word: 'Ambiguous', definition: 'Open to more than one interpretation; unclear', example: 'The contract language was deliberately ambiguous.', difficulty: 'intermediate', category: 'business' },
-    { word: 'Augment', definition: 'Make something greater by adding to it', example: 'We plan to augment the team with three new hires.', difficulty: 'intermediate', category: 'business' },
-    { word: 'Unprecedented', definition: 'Never done or known before', example: 'The company achieved unprecedented growth this year.', difficulty: 'intermediate', category: 'general' },
-    { word: 'Nuanced', definition: 'Characterized by subtle differences or distinctions', example: 'The discussion requires a more nuanced understanding of the issue.', difficulty: 'intermediate', category: 'academic' },
-    { word: 'Synthesize', definition: 'Combine elements into a coherent whole', example: 'She was able to synthesize complex data into a clear narrative.', difficulty: 'intermediate', category: 'academic' },
-    { word: 'Tangible', definition: 'Clear and definite; real; perceptible by touch', example: 'We need tangible results, not just promises.', difficulty: 'intermediate', category: 'business' },
-    { word: 'Facilitate', definition: 'Make an action or process easier', example: 'The new software will facilitate collaboration between teams.', difficulty: 'intermediate', category: 'business' },
-
-    // ADVANCED
-    { word: 'Ephemeral', definition: 'Lasting for a very short time', example: 'Social media stories are deliberately ephemeral by design.', difficulty: 'advanced', category: 'creative' },
-    { word: 'Serendipity', definition: 'The occurrence of finding pleasant things by chance', example: 'It was pure serendipity that we met at that conference.', difficulty: 'advanced', category: 'general' },
-    { word: 'Quintessential', definition: 'Representing the most perfect example of something', example: 'She is the quintessential entrepreneur: bold, creative, and driven.', difficulty: 'advanced', category: 'general' },
-    { word: 'Magnanimous', definition: 'Very generous or forgiving, especially toward a rival', example: 'He was magnanimous in victory, praising his opponent\'s effort.', difficulty: 'advanced', category: 'general' },
-    { word: 'Ineffable', definition: 'Too great or extreme to be expressed in words', example: 'There was an ineffable beauty to the sunset over the mountains.', difficulty: 'advanced', category: 'creative' },
-    { word: 'Cacophony', definition: 'A harsh, discordant mixture of sounds', example: 'The construction site was a cacophony of drills and hammers.', difficulty: 'advanced', category: 'creative' },
-    { word: 'Sycophant', definition: 'A person who flatters to gain advantage', example: 'A good leader surrounds themselves with advisors, not sycophants.', difficulty: 'advanced', category: 'general' },
-    { word: 'Obsequious', definition: 'Excessively obedient or attentive to gain favor', example: 'His obsequious behavior around the boss was uncomfortable to watch.', difficulty: 'advanced', category: 'business' },
-    { word: 'Pernicious', definition: 'Having a harmful effect, especially in a gradual way', example: 'The pernicious effects of misinformation are hard to undo.', difficulty: 'advanced', category: 'academic' },
-    { word: 'Dichotomy', definition: 'A division into two mutually exclusive groups', example: 'There is a false dichotomy between profit and social responsibility.', difficulty: 'advanced', category: 'academic' },
-    { word: 'Amalgamate', definition: 'Combine or unite to form one structure', example: 'The two departments will amalgamate into a single division.', difficulty: 'advanced', category: 'business' },
-    { word: 'Perfunctory', definition: 'Carried out with minimum effort or care', example: 'He gave a perfunctory nod and continued scrolling his phone.', difficulty: 'advanced', category: 'general' },
-
-    // EXPERT
-    { word: 'Loquacious', definition: 'Tending to talk a great deal; talkative', example: 'The loquacious host kept the conversation flowing effortlessly.', difficulty: 'expert', category: 'general' },
-    { word: 'Verisimilitude', definition: 'The appearance of being true or real', example: 'The film achieved remarkable verisimilitude in its depiction of ancient Rome.', difficulty: 'expert', category: 'creative' },
-    { word: 'Grandiloquent', definition: 'Pompous or extravagant in language or style', example: 'His grandiloquent speeches impressed some but annoyed others.', difficulty: 'expert', category: 'creative' },
-    { word: 'Perspicacious', definition: 'Having a ready insight into and understanding of things', example: 'The perspicacious analyst predicted the market crash months before.', difficulty: 'expert', category: 'business' },
-    { word: 'Pusillanimous', definition: 'Showing a lack of courage or determination; timid', example: 'The board made a pusillanimous decision to avoid any risk.', difficulty: 'expert', category: 'general' },
-    { word: 'Sesquipedalian', definition: 'Relating to or characterized by the use of long words', example: 'His sesquipedalian writing style made the manual hard to read.', difficulty: 'expert', category: 'creative' },
-    { word: 'Conflagration', definition: 'An extensive and destructive fire', example: 'The small spark turned into a conflagration that engulfed the building.', difficulty: 'expert', category: 'general' },
-    { word: 'Antediluvian', definition: 'Ridiculously old-fashioned', example: 'Their antediluvian technology systems desperately needed upgrading.', difficulty: 'expert', category: 'general' },
-    { word: 'Tergiversation', definition: 'The act of being evasive or ambiguous', example: 'The politician\'s tergiversation on the issue frustrated voters.', difficulty: 'expert', category: 'academic' },
-    { word: 'Defenestration', definition: 'The action of throwing someone out of a window; removal from power', example: 'The board\'s defenestration of the CEO shocked the industry.', difficulty: 'expert', category: 'academic' },
-    { word: 'Mellifluous', definition: 'Sweet or musical; pleasant to hear', example: 'Her mellifluous voice captivated the entire audience.', difficulty: 'expert', category: 'creative' },
-    { word: 'Propinquity', definition: 'Nearness in place or time; kinship', example: 'The propinquity of the two events suggests a causal connection.', difficulty: 'expert', category: 'academic' },
+  // ---- Definition Match word bank ----
+  // Each word has a correct definition and 3 plausible wrong ones
+  const DEFINITION_BANK = [
+    { word: 'Relevant', definition: 'Closely connected or appropriate to the matter at hand', wrongDefinitions: ['Required by law or regulation', 'Repeated multiple times for emphasis', 'Resistant to change or influence'], difficulty: 'beginner', category: 'general' },
+    { word: 'Adequate', definition: 'Sufficient for a specific need or requirement', wrongDefinitions: ['Perfectly executed without any flaws', 'Adjusted to fit new circumstances', 'Admired by a large group of people'], difficulty: 'beginner', category: 'general' },
+    { word: 'Concise', definition: 'Giving a lot of information clearly in few words', wrongDefinitions: ['Agreeing with someone reluctantly', 'Happening at the same time as something else', 'Certain about something without any doubt'], difficulty: 'beginner', category: 'general' },
+    { word: 'Diligent', definition: 'Showing careful and persistent effort in work', wrongDefinitions: ['Willing to share with others generously', 'Having a natural talent for something', 'Speaking in a direct and honest manner'], difficulty: 'beginner', category: 'general' },
+    { word: 'Pragmatic', definition: 'Dealing with things sensibly and realistically', wrongDefinitions: ['Following strict rules without exception', 'Expressing emotions openly and freely', 'Acting without thinking about consequences'], difficulty: 'beginner', category: 'general' },
+    { word: 'Substantial', definition: 'Of considerable importance, size, or worth', wrongDefinitions: ['Easily broken or damaged by force', 'Located beneath the surface of something', 'Substituted in place of the original'], difficulty: 'beginner', category: 'business' },
+    { word: 'Versatile', definition: 'Able to adapt to many different functions or activities', wrongDefinitions: ['Speaking in a poetic or rhythmic way', 'Arranged in a vertical or upright position', 'Competing against others for dominance'], difficulty: 'beginner', category: 'general' },
+    { word: 'Comprehensive', definition: 'Including all or nearly all elements or aspects', wrongDefinitions: ['Easy to understand at first glance', 'Feeling sympathy for another person', 'Forced to comply against your will'], difficulty: 'beginner', category: 'academic' },
+    { word: 'Ambiguous', definition: 'Open to more than one interpretation; unclear', wrongDefinitions: ['Extremely large in size or scope', 'Having strong desires to achieve success', 'Willing to take bold risks'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Facilitate', definition: 'Make an action or process easier', wrongDefinitions: ['Create something entirely from scratch', 'Pretend to have a quality you lack', 'Break something into smaller parts'], difficulty: 'beginner', category: 'business' },
+    { word: 'Resilient', definition: 'Able to recover quickly from difficulties', wrongDefinitions: ['Unwilling to change your opinion', 'Resistant to any kind of authority', 'Living in a remote rural area'], difficulty: 'beginner', category: 'general' },
+    { word: 'Meticulous', definition: 'Showing great attention to detail; very careful', wrongDefinitions: ['Happening in a very dramatic fashion', 'Relating to metals or metal work', 'Extremely fast and efficient'], difficulty: 'beginner', category: 'general' },
+    { word: 'Elaborate', definition: 'Involving many carefully arranged parts; detailed', wrongDefinitions: ['Arriving late to an important event', 'Working independently without help', 'Choosing the simplest available option'], difficulty: 'beginner', category: 'general' },
+    { word: 'Credible', definition: 'Able to be believed; convincing and trustworthy', wrongDefinitions: ['Deserving praise for an achievement', 'Able to be bent without breaking', 'Likely to cause harm or injury'], difficulty: 'beginner', category: 'general' },
+    { word: 'Inevitable', definition: 'Certain to happen; unavoidable', wrongDefinitions: ['Invisible to the naked eye', 'Not able to be invented or created', 'Happening inside a closed space'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Profound', definition: 'Very great or intense; having deep meaning', wrongDefinitions: ['Existing in large quantities', 'Found only in professional settings', 'Proving something to be correct'], difficulty: 'intermediate', category: 'academic' },
+    { word: 'Feasible', definition: 'Possible and practical to do or achieve', wrongDefinitions: ['Easy to celebrate or enjoy', 'Capable of being seen from far away', 'Likely to cause a festive mood'], difficulty: 'intermediate', category: 'business' },
+    { word: 'Prevalent', definition: 'Widespread in a particular area or at a particular time', wrongDefinitions: ['Happening before the expected time', 'Having the ability to prevent harm', 'Valued more highly than everything else'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Inherent', definition: 'Existing as a natural or permanent quality of something', wrongDefinitions: ['Received through a legal will or inheritance', 'Hidden from view or kept secret', 'Placed inside a container for storage'], difficulty: 'intermediate', category: 'academic' },
+    { word: 'Tangible', definition: 'Clear and definite; real enough to be perceived', wrongDefinitions: ['Easily tangled or twisted together', 'Capable of being argued or debated', 'Related to taste or flavor'], difficulty: 'intermediate', category: 'business' },
+    { word: 'Articulate', definition: 'Expressing oneself clearly and effectively', wrongDefinitions: ['Having joints that move freely', 'Creating visual art professionally', 'Joining separate pieces together'], difficulty: 'beginner', category: 'general' },
+    { word: 'Conducive', definition: 'Making a certain situation or outcome likely', wrongDefinitions: ['Leading a group with authority', 'Transferring electricity or heat', 'Behaving in a polite and proper way'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Prudent', definition: 'Acting with care and thought for the future', wrongDefinitions: ['Feeling proud of your accomplishments', 'Being overly strict with others', 'Showing off wealth or status'], difficulty: 'intermediate', category: 'business' },
+    { word: 'Subtle', definition: 'So delicate or precise as to be difficult to notice', wrongDefinitions: ['Located directly below something', 'Appearing only at certain times', 'Changed into a different form'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Coherent', definition: 'Logical and consistent; easy to follow', wrongDefinitions: ['Sticking together physically', 'Working together as equal partners', 'Following the latest trends'], difficulty: 'intermediate', category: 'academic' },
+    { word: 'Lucid', definition: 'Expressed clearly; easy to understand', wrongDefinitions: ['Giving off a faint glow of light', 'Extremely fortunate or lucky', 'Happening during sleep or rest'], difficulty: 'intermediate', category: 'academic' },
+    { word: 'Mitigate', definition: 'Make something less severe or serious', wrongDefinitions: ['Move from one place to another', 'Copy or imitate someone exactly', 'Combine two things into one'], difficulty: 'intermediate', category: 'business' },
+    { word: 'Scrutinize', definition: 'Examine or inspect closely and thoroughly', wrongDefinitions: ['Clean something until it shines', 'Write in very small handwriting', 'Criticize someone harshly in public'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Contemplate', definition: 'Look at thoughtfully; think about deeply', wrongDefinitions: ['Show strong disapproval of something', 'Argue against a popular belief', 'Arrive at the same time as others'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Trivial', definition: 'Of little value or importance; insignificant', wrongDefinitions: ['Having exactly three components', 'Relating to ancient civilizations', 'Happening every three years'], difficulty: 'beginner', category: 'general' },
+    { word: 'Discrepancy', definition: 'A difference between things that should be the same', wrongDefinitions: ['A lack of respect for authority', 'A feeling of sadness or loss', 'A secret plan to cause harm'], difficulty: 'intermediate', category: 'business' },
+    { word: 'Exemplary', definition: 'Serving as a desirable model; very good', wrongDefinitions: ['Free from any rules or restrictions', 'Given as a sample without charge', 'Required to complete a test or exam'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Impartial', definition: 'Treating all rivals or sides equally; fair', wrongDefinitions: ['Not complete; missing some parts', 'Unable to be divided into parts', 'Having no particular interest in anything'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Mundane', definition: 'Lacking interest or excitement; dull and ordinary', wrongDefinitions: ['Relating to the entire world', 'Clean and free from bacteria', 'Happening once every month'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Precarious', definition: 'Not securely held; dangerously likely to fall or fail', wrongDefinitions: ['Extremely valuable and worth protecting', 'Coming before something in time', 'Done with great care and precision'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Superficial', definition: 'Existing or occurring at the surface; lacking depth', wrongDefinitions: ['Better than everything else; supreme', 'Having supernatural or magical powers', 'Extremely well organized and efficient'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Complacent', definition: 'Smugly satisfied with oneself; uncritically content', wrongDefinitions: ['Willing to follow orders without question', 'Expressing a formal complaint officially', 'Feeling grateful for what you have'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Redundant', definition: 'No longer needed or useful; unnecessarily repetitive', wrongDefinitions: ['Extremely abundant and overflowing', 'Painted a deep shade of red', 'Returned to a previous condition'], difficulty: 'intermediate', category: 'business' },
+    { word: 'Sporadic', definition: 'Occurring at irregular intervals; not constant', wrongDefinitions: ['Related to athletics or physical exercise', 'Happening in a dramatic and sudden way', 'Spread evenly across a large area'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Eloquent', definition: 'Fluent or persuasive in speaking or writing', wrongDefinitions: ['Extremely elegant in appearance', 'Silent and unwilling to communicate', 'Referring to a specific historical period'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Futile', definition: 'Incapable of producing any useful result; pointless', wrongDefinitions: ['Full of energy and enthusiasm', 'Relating to events in the future', 'Extremely small in size or amount'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Hinder', definition: 'Create difficulties that delay or prevent progress', wrongDefinitions: ['Stay behind someone to offer support', 'Look back at past events with fondness', 'Connect two separate things together'], difficulty: 'beginner', category: 'general' },
+    { word: 'Nominal', definition: 'Existing in name only; very small or token', wrongDefinitions: ['Following all expected social norms', 'Being the most popular choice', 'Selected by voting or nomination'], difficulty: 'intermediate', category: 'business' },
+    { word: 'Plausible', definition: 'Seeming reasonable or probable; believable', wrongDefinitions: ['Deserving of applause and recognition', 'Flexible enough to be shaped easily', 'Likely to cause pleasure or delight'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Detrimental', definition: 'Tending to cause harm; damaging', wrongDefinitions: ['Helping to determine the final outcome', 'Firmly committed to a specific goal', 'Easily identified or recognized'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Tenacious', definition: 'Holding firmly to something; persistent and determined', wrongDefinitions: ['Living in rented accommodation', 'Easily stretched without breaking', 'Having a gentle and quiet nature'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Obsolete', definition: 'No longer produced or used; out of date', wrongDefinitions: ['Extremely large and difficult to move', 'Following all requirements precisely', 'Happening without any warning'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Unanimous', definition: 'Fully in agreement; with everyone consenting', wrongDefinitions: ['Done without revealing your identity', 'Happening only one time ever', 'Related to a single universe or world'], difficulty: 'intermediate', category: 'general' },
+    { word: 'Volatile', definition: 'Liable to change rapidly and unpredictably', wrongDefinitions: ['Relating to electrical voltage', 'Done by free will and choice', 'Large enough to fill a whole volume'], difficulty: 'intermediate', category: 'business' },
+    { word: 'Arbitrary', definition: 'Based on random choice rather than reason', wrongDefinitions: ['Relating to trees and woodland areas', 'Serving as a judge or mediator', 'Following a strict alphabetical order'], difficulty: 'intermediate', category: 'general' },
   ];
 
-  // ---- Synonym bank (for Synonym Sprint) ----
-  const SYNONYM_BANK = [
-    { common: 'big', synonyms: ['substantial', 'considerable', 'immense', 'colossal', 'monumental'] },
-    { common: 'small', synonyms: ['diminutive', 'minuscule', 'negligible', 'trivial', 'marginal'] },
-    { common: 'good', synonyms: ['exemplary', 'commendable', 'exceptional', 'superb', 'outstanding'] },
-    { common: 'bad', synonyms: ['detrimental', 'deplorable', 'abysmal', 'atrocious', 'egregious'] },
-    { common: 'happy', synonyms: ['elated', 'euphoric', 'jubilant', 'ecstatic', 'exuberant'] },
-    { common: 'sad', synonyms: ['melancholy', 'despondent', 'morose', 'somber', 'disconsolate'] },
-    { common: 'smart', synonyms: ['astute', 'shrewd', 'perspicacious', 'sagacious', 'erudite'] },
-    { common: 'fast', synonyms: ['expeditious', 'swift', 'brisk', 'accelerated', 'precipitous'] },
-    { common: 'slow', synonyms: ['lethargic', 'sluggish', 'languid', 'deliberate', 'protracted'] },
-    { common: 'angry', synonyms: ['incensed', 'irate', 'indignant', 'livid', 'wrathful'] },
-    { common: 'scared', synonyms: ['apprehensive', 'petrified', 'trepidatious', 'aghast', 'daunted'] },
-    { common: 'beautiful', synonyms: ['resplendent', 'exquisite', 'magnificent', 'stunning', 'sublime'] },
-    { common: 'ugly', synonyms: ['unsightly', 'grotesque', 'repugnant', 'hideous', 'abhorrent'] },
-    { common: 'important', synonyms: ['paramount', 'pivotal', 'imperative', 'consequential', 'indispensable'] },
-    { common: 'easy', synonyms: ['effortless', 'straightforward', 'rudimentary', 'elementary', 'uncomplicated'] },
-    { common: 'hard', synonyms: ['arduous', 'formidable', 'strenuous', 'onerous', 'laborious'] },
-    { common: 'old', synonyms: ['antiquated', 'archaic', 'venerable', 'primordial', 'anachronistic'] },
-    { common: 'new', synonyms: ['novel', 'nascent', 'cutting-edge', 'contemporary', 'unprecedented'] },
-    { common: 'clear', synonyms: ['lucid', 'transparent', 'unambiguous', 'explicit', 'manifest'] },
-    { common: 'confusing', synonyms: ['perplexing', 'bewildering', 'convoluted', 'enigmatic', 'inscrutable'] },
+  // ---- Sentence Fill bank ----
+  // Player sees sentence + 4 options, must SAY the correct word
+  const SENTENCE_BANK = [
+    { sentence: 'The report was _____ and got straight to the point without any filler.', correctWord: 'concise', distractors: ['brief', 'short', 'small'] },
+    { sentence: 'Her feedback was very _____ to the topic we were discussing.', correctWord: 'relevant', distractors: ['related', 'important', 'useful'] },
+    { sentence: 'The budget they gave us was _____ for what we needed to complete the project.', correctWord: 'adequate', distractors: ['enough', 'plenty', 'decent'] },
+    { sentence: 'We need a more _____ approach instead of just hoping things work out.', correctWord: 'pragmatic', distractors: ['practical', 'realistic', 'logical'] },
+    { sentence: 'The evidence she presented was extremely _____ and hard to argue against.', correctWord: 'compelling', distractors: ['strong', 'convincing', 'powerful'] },
+    { sentence: 'His instructions were so _____ that nobody had any confusion about what to do.', correctWord: 'explicit', distractors: ['clear', 'obvious', 'simple'] },
+    { sentence: 'The new policy had a _____ effect on employee morale across departments.', correctWord: 'detrimental', distractors: ['harmful', 'negative', 'damaging'] },
+    { sentence: 'She was _____ in her research, checking every source twice.', correctWord: 'meticulous', distractors: ['careful', 'thorough', 'precise'] },
+    { sentence: 'The CEO gave a _____ speech that moved the entire audience.', correctWord: 'eloquent', distractors: ['beautiful', 'powerful', 'moving'] },
+    { sentence: 'The wording of the contract was deliberately _____, leaving room for interpretation.', correctWord: 'ambiguous', distractors: ['vague', 'unclear', 'confusing'] },
+    { sentence: 'Despite repeated setbacks, the team remained _____ and bounced back every time.', correctWord: 'resilient', distractors: ['strong', 'tough', 'determined'] },
+    { sentence: 'The success of this project is _____ on getting approval from the board first.', correctWord: 'contingent', distractors: ['dependent', 'reliant', 'based'] },
+    { sentence: 'The quiet library environment is very _____ to focused study.', correctWord: 'conducive', distractors: ['helpful', 'good', 'suitable'] },
+    { sentence: 'We saw _____ growth in revenue compared to last quarter.', correctWord: 'substantial', distractors: ['big', 'large', 'major'] },
+    { sentence: 'His _____ work ethic is the main reason he got promoted so quickly.', correctWord: 'diligent', distractors: ['hard', 'strong', 'dedicated'] },
+    { sentence: 'The plan is _____ if we can secure the funding by next month.', correctWord: 'feasible', distractors: ['possible', 'doable', 'achievable'] },
+    { sentence: 'She offered a _____ perspective that changed how we viewed the whole problem.', correctWord: 'profound', distractors: ['deep', 'interesting', 'unique'] },
+    { sentence: 'Misinformation on social media has become increasingly _____ in recent years.', correctWord: 'prevalent', distractors: ['common', 'widespread', 'frequent'] },
+    { sentence: 'The manager tried to _____ the conflict between the two departments.', correctWord: 'mitigate', distractors: ['reduce', 'solve', 'handle'] },
+    { sentence: 'After the scandal, the company had to _____ its damaged public image.', correctWord: 'restore', distractors: ['fix', 'rebuild', 'repair'] },
+    { sentence: 'The data shows a clear _____ between the two sets of numbers.', correctWord: 'discrepancy', distractors: ['difference', 'gap', 'mismatch'] },
+    { sentence: 'It would be _____ to invest everything in a single stock.', correctWord: 'imprudent', distractors: ['stupid', 'risky', 'dangerous'] },
+    { sentence: 'The new software will _____ collaboration between remote teams.', correctWord: 'facilitate', distractors: ['improve', 'help', 'enable'] },
+    { sentence: 'He remained _____ about the project even when others lost faith.', correctWord: 'optimistic', distractors: ['hopeful', 'positive', 'confident'] },
+    { sentence: 'The results were _____ evidence that the new method actually works.', correctWord: 'tangible', distractors: ['solid', 'real', 'clear'] },
+    { sentence: 'Her _____ nature means she can handle any role the company needs.', correctWord: 'versatile', distractors: ['flexible', 'adaptable', 'capable'] },
+    { sentence: 'The committee reached a _____ decision after three hours of debate.', correctWord: 'unanimous', distractors: ['final', 'complete', 'joint'] },
+    { sentence: 'Trying to change his mind at this point would be _____.', correctWord: 'futile', distractors: ['useless', 'pointless', 'wasteful'] },
+    { sentence: 'The judge must remain _____ throughout the entire trial.', correctWord: 'impartial', distractors: ['fair', 'neutral', 'balanced'] },
+    { sentence: 'The changes she proposed were _____ but could transform the company.', correctWord: 'bold', distractors: ['brave', 'daring', 'risky'] },
+  ];
+
+  // ---- Recall Challenge bank ----
+  // Player sees only a definition, must SAY the word
+  // Using the DEFINITION_BANK words - just need word + definition
+  // (We reuse DEFINITION_BANK for this mode)
+
+  // ---- Word Upgrade bank ----
+  // Common word -> say a more elevated synonym
+  const UPGRADE_BANK = [
+    { commonWord: 'enough', acceptedUpgrades: ['sufficient', 'adequate', 'ample'] },
+    { commonWord: 'important', acceptedUpgrades: ['significant', 'crucial', 'essential', 'vital', 'paramount', 'pivotal'] },
+    { commonWord: 'big', acceptedUpgrades: ['substantial', 'considerable', 'significant', 'immense'] },
+    { commonWord: 'small', acceptedUpgrades: ['minimal', 'negligible', 'marginal', 'trivial', 'modest'] },
+    { commonWord: 'good', acceptedUpgrades: ['excellent', 'exceptional', 'superb', 'commendable', 'exemplary', 'outstanding'] },
+    { commonWord: 'bad', acceptedUpgrades: ['detrimental', 'adverse', 'harmful', 'unfavorable', 'deplorable'] },
+    { commonWord: 'clear', acceptedUpgrades: ['explicit', 'lucid', 'coherent', 'transparent', 'unambiguous'] },
+    { commonWord: 'confusing', acceptedUpgrades: ['ambiguous', 'perplexing', 'convoluted', 'bewildering'] },
+    { commonWord: 'careful', acceptedUpgrades: ['meticulous', 'diligent', 'thorough', 'prudent', 'scrupulous'] },
+    { commonWord: 'useful', acceptedUpgrades: ['beneficial', 'advantageous', 'valuable', 'instrumental'] },
+    { commonWord: 'hard', acceptedUpgrades: ['arduous', 'strenuous', 'formidable', 'demanding', 'rigorous'] },
+    { commonWord: 'easy', acceptedUpgrades: ['effortless', 'straightforward', 'feasible', 'manageable'] },
+    { commonWord: 'fast', acceptedUpgrades: ['expeditious', 'swift', 'rapid', 'prompt'] },
+    { commonWord: 'slow', acceptedUpgrades: ['sluggish', 'lethargic', 'gradual', 'deliberate'] },
+    { commonWord: 'angry', acceptedUpgrades: ['furious', 'irate', 'indignant', 'livid', 'incensed'] },
+    { commonWord: 'happy', acceptedUpgrades: ['elated', 'jubilant', 'ecstatic', 'euphoric', 'delighted'] },
+    { commonWord: 'sad', acceptedUpgrades: ['melancholy', 'somber', 'despondent', 'dismal', 'gloomy'] },
+    { commonWord: 'old', acceptedUpgrades: ['antiquated', 'obsolete', 'archaic', 'outdated'] },
+    { commonWord: 'new', acceptedUpgrades: ['novel', 'innovative', 'contemporary', 'cutting-edge', 'unprecedented'] },
+    { commonWord: 'smart', acceptedUpgrades: ['astute', 'shrewd', 'perceptive', 'discerning', 'insightful'] },
+    { commonWord: 'strong', acceptedUpgrades: ['robust', 'resilient', 'formidable', 'tenacious'] },
+    { commonWord: 'weak', acceptedUpgrades: ['fragile', 'vulnerable', 'feeble', 'precarious'] },
+    { commonWord: 'likely', acceptedUpgrades: ['probable', 'plausible', 'feasible', 'conceivable'] },
+    { commonWord: 'unlikely', acceptedUpgrades: ['improbable', 'implausible', 'dubious', 'remote'] },
+    { commonWord: 'normal', acceptedUpgrades: ['conventional', 'typical', 'standard', 'customary', 'mundane'] },
+    { commonWord: 'strange', acceptedUpgrades: ['peculiar', 'anomalous', 'unconventional', 'irregular'] },
+    { commonWord: 'rich', acceptedUpgrades: ['affluent', 'prosperous', 'opulent', 'abundant'] },
+    { commonWord: 'poor', acceptedUpgrades: ['impoverished', 'destitute', 'meager', 'scarce'] },
+    { commonWord: 'short', acceptedUpgrades: ['concise', 'brief', 'succinct', 'compact'] },
+    { commonWord: 'boring', acceptedUpgrades: ['mundane', 'monotonous', 'tedious', 'stale'] },
   ];
 
   // ---- Cache & state ----
   let cachedWords = [];
   let usedIndices = new Set();
+  let usedSentenceIndices = new Set();
+  let usedUpgradeIndices = new Set();
 
   // ---- Groq API integration ----
   const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
@@ -105,11 +152,11 @@ RR.Vocabulary = (function () {
 Requirements:
 - Difficulty level: ${difficulty}
 - Category: ${category}
-- Each word should be a sophisticated English word that educated adults might know but struggle to recall quickly
+- Each word should be a moderately complex English word (like "relevant", "adequate", "concise", "pragmatic") - NOT overly obscure
 - Return ONLY valid JSON array, no markdown or explanation
 
 Format each word as:
-{"word": "Ubiquitous", "definition": "present, appearing, or found everywhere", "example": "Smartphones have become ubiquitous in modern society."}
+{"word": "Pragmatic", "definition": "dealing with things sensibly and realistically", "wrongDefinitions": ["following strict rules without exception", "expressing emotions openly and freely", "acting without thinking about consequences"], "example": "We need a pragmatic approach to solve this budget issue."}
 
 Return a JSON array of ${count} objects in this exact format. Only output the JSON array, nothing else.`;
 
@@ -139,14 +186,12 @@ Return a JSON array of ${count} objects in this exact format. Only output the JS
       const data = await response.json();
       const content = data.choices[0].message.content.trim();
 
-      // Parse JSON (handle potential markdown wrapping)
       let jsonStr = content;
       if (jsonStr.startsWith('```')) {
         jsonStr = jsonStr.replace(/```json?\n?/g, '').replace(/```/g, '').trim();
       }
 
       const words = JSON.parse(jsonStr);
-      // Add metadata
       return words.map(w => ({
         ...w,
         difficulty: difficulty,
@@ -161,17 +206,14 @@ Return a JSON array of ${count} objects in this exact format. Only output the JS
   async function loadWords(difficulty, category, count) {
     count = count || 20;
 
-    // Try Groq API first
     const aiWords = await _fetchFromGroq(difficulty, category, count);
     if (aiWords && aiWords.length > 0) {
       cachedWords = aiWords;
       usedIndices.clear();
-      // Also cache in storage for offline use
       RR.Storage.set('cachedVocabulary', aiWords);
       return aiWords;
     }
 
-    // Fallback to cached words from previous session
     const stored = RR.Storage.get('cachedVocabulary');
     if (stored && stored.length > 0) {
       cachedWords = stored;
@@ -179,16 +221,14 @@ Return a JSON array of ${count} objects in this exact format. Only output the JS
       return stored;
     }
 
-    // Fallback to hardcoded words
-    cachedWords = _filterFallback(difficulty, category);
+    cachedWords = _filterDefinitionBank(difficulty, category);
     usedIndices.clear();
     return cachedWords;
   }
 
-  function _filterFallback(difficulty, category) {
-    let words = [...FALLBACK_WORDS];
+  function _filterDefinitionBank(difficulty, category) {
+    let words = [...DEFINITION_BANK];
 
-    // Filter by difficulty (allow current and one level below)
     const levels = ['beginner', 'intermediate', 'advanced', 'expert'];
     const idx = levels.indexOf(difficulty);
     if (idx >= 0) {
@@ -196,26 +236,22 @@ Return a JSON array of ${count} objects in this exact format. Only output the JS
       words = words.filter(w => allowed.includes(w.difficulty));
     }
 
-    // Filter by category (include 'general' always)
     if (category && category !== 'general') {
       words = words.filter(w => w.category === category || w.category === 'general');
     }
 
-    // Shuffle
     return _shuffle(words);
   }
 
   function getNextWord() {
     if (cachedWords.length === 0) {
-      cachedWords = _shuffle([...FALLBACK_WORDS]);
+      cachedWords = _shuffle([...DEFINITION_BANK]);
     }
 
-    // If all words used, reset
     if (usedIndices.size >= cachedWords.length) {
       usedIndices.clear();
     }
 
-    // Find unused word
     let idx;
     do {
       idx = Math.floor(Math.random() * cachedWords.length);
@@ -225,13 +261,83 @@ Return a JSON array of ${count} objects in this exact format. Only output the JS
     return cachedWords[idx];
   }
 
-  function getRandomSynonymChallenge() {
-    const idx = Math.floor(Math.random() * SYNONYM_BANK.length);
-    return SYNONYM_BANK[idx];
+  // ---- Definition Match helpers ----
+  function getDefinitionChallenge() {
+    // Returns a random word with its correct definition + 3 wrong ones, shuffled
+    const bank = DEFINITION_BANK;
+    if (usedIndices.size >= bank.length) usedIndices.clear();
+
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * bank.length);
+    } while (usedIndices.has(idx) && usedIndices.size < bank.length);
+    usedIndices.add(idx);
+
+    const entry = bank[idx];
+    const options = _shuffle([
+      { text: entry.definition, correct: true },
+      { text: entry.wrongDefinitions[0], correct: false },
+      { text: entry.wrongDefinitions[1], correct: false },
+      { text: entry.wrongDefinitions[2], correct: false },
+    ]);
+
+    return {
+      word: entry.word,
+      options: options,
+      correctDefinition: entry.definition,
+    };
   }
 
-  function getSynonymBank() {
-    return SYNONYM_BANK;
+  // ---- Sentence Fill helpers ----
+  function getSentenceChallenge() {
+    const bank = SENTENCE_BANK;
+    if (usedSentenceIndices.size >= bank.length) usedSentenceIndices.clear();
+
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * bank.length);
+    } while (usedSentenceIndices.has(idx) && usedSentenceIndices.size < bank.length);
+    usedSentenceIndices.add(idx);
+
+    const entry = bank[idx];
+    const options = _shuffle([entry.correctWord, ...entry.distractors]);
+
+    return {
+      sentence: entry.sentence,
+      correctWord: entry.correctWord,
+      options: options,
+    };
+  }
+
+  // ---- Recall Challenge helpers ----
+  function getRecallChallenge() {
+    // Pick a random word from DEFINITION_BANK, return just the definition
+    const bank = DEFINITION_BANK;
+    const idx = Math.floor(Math.random() * bank.length);
+    return {
+      word: bank[idx].word,
+      definition: bank[idx].definition,
+    };
+  }
+
+  // ---- Word Upgrade helpers ----
+  function getUpgradeChallenge() {
+    const bank = UPGRADE_BANK;
+    if (usedUpgradeIndices.size >= bank.length) usedUpgradeIndices.clear();
+
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * bank.length);
+    } while (usedUpgradeIndices.has(idx) && usedUpgradeIndices.size < bank.length);
+    usedUpgradeIndices.add(idx);
+
+    return bank[idx];
+  }
+
+  function resetUsedIndices() {
+    usedIndices.clear();
+    usedSentenceIndices.clear();
+    usedUpgradeIndices.clear();
   }
 
   function _shuffle(arr) {
@@ -246,8 +352,11 @@ Return a JSON array of ${count} objects in this exact format. Only output the JS
   return {
     loadWords,
     getNextWord,
-    getRandomSynonymChallenge,
-    getSynonymBank,
-    FALLBACK_WORDS,
+    getDefinitionChallenge,
+    getSentenceChallenge,
+    getRecallChallenge,
+    getUpgradeChallenge,
+    resetUsedIndices,
+    DEFINITION_BANK,
   };
 })();

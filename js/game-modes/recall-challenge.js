@@ -1,13 +1,14 @@
 /* ================================================
-   Speed Recall - Main Game Mode
-   Say the target word in a sentence before time runs out
+   Recall Challenge - Speech-based
+   Definition shown, player must SAY the word
+   Pure vocabulary recall from memory
    ================================================ */
 window.RR = window.RR || {};
 RR.GameModes = RR.GameModes || {};
 
-RR.GameModes.SpeedRecall = (function () {
-  const MODE_ID = 'speed-recall';
-  const ROUND_COUNT = 15; // Words per game
+RR.GameModes.RecallChallenge = (function () {
+  const MODE_ID = 'recall-challenge';
+  const ROUND_COUNT = 10;
 
   let state = {
     active: false,
@@ -17,21 +18,19 @@ RR.GameModes.SpeedRecall = (function () {
     wordsCompleted: 0,
     wordsCorrect: 0,
     roundIndex: 0,
-    currentWord: null,
+    currentChallenge: null,
     timerDuration: 10,
     timerRemaining: 10,
     timerInterval: null,
     roundStartTime: 0,
     totalResponseTime: 0,
     hintUsed: false,
+    usedWords: [],
   };
 
-  // DOM refs
   const $ = (id) => document.getElementById(id);
 
-  function init() {
-    // Listeners are set up by app.js
-  }
+  function init() {}
 
   async function start() {
     const settings = RR.Storage.getSettings();
@@ -43,24 +42,24 @@ RR.GameModes.SpeedRecall = (function () {
       wordsCompleted: 0,
       wordsCorrect: 0,
       roundIndex: 0,
-      currentWord: null,
+      currentChallenge: null,
       timerDuration: settings.timerDuration,
       timerRemaining: settings.timerDuration,
       timerInterval: null,
       roundStartTime: 0,
       totalResponseTime: 0,
       hintUsed: false,
+      usedWords: [],
     };
 
-    // Load vocabulary
-    await RR.Vocabulary.loadWords(settings.difficulty, settings.category);
-
-    // Update UI
-    $('game-mode-title').textContent = 'Speed Recall';
+    // UI setup - speech mode, no answer grid
+    $('game-mode-title').textContent = 'Recall Challenge';
     $('game-score').textContent = '0';
     $('game-streak').textContent = '0';
+    $('transcript-bar').style.display = '';
+    $('answer-grid').style.display = 'none';
+    $('bomb-container').style.display = 'none';
 
-    // Start first round
     _nextRound();
   }
 
@@ -78,34 +77,87 @@ RR.GameModes.SpeedRecall = (function () {
       return;
     }
 
-    // Get next word
-    state.currentWord = RR.Vocabulary.getNextWord();
+    // Get a challenge we haven't used yet
+    let challenge;
+    let attempts = 0;
+    do {
+      challenge = RR.Vocabulary.getRecallChallenge();
+      attempts++;
+    } while (state.usedWords.includes(challenge.word) && attempts < 50);
+
+    state.currentChallenge = challenge;
+    state.usedWords.push(challenge.word);
     state.roundIndex++;
     state.hintUsed = false;
 
     // Animate word card
     const wordCard = $('word-card');
     wordCard.classList.remove('anim-word-enter');
-    void wordCard.offsetWidth; // Force reflow
+    void wordCard.offsetWidth;
     wordCard.classList.add('anim-word-enter');
 
-    // Display word
-    $('word-main').textContent = state.currentWord.word.toUpperCase();
-    $('word-definition').textContent = state.currentWord.definition;
-    $('word-example').textContent = `"${state.currentWord.example}"`;
+    // Show ONLY the definition (not the word!)
+    $('word-main').textContent = '???';
+    $('word-main').style.fontSize = '';
+    $('word-main').style.lineHeight = '';
+    $('word-definition').textContent = challenge.definition;
+    $('word-example').textContent = `Round ${state.roundIndex} of ${ROUND_COUNT} \u2022 Say the word!`;
     $('transcript-text').textContent = 'Listening...';
     $('transcript-text').classList.remove('highlight');
 
     // Set speech target
-    RR.Speech.setTarget(state.currentWord.word);
+    RR.Speech.setTarget(challenge.word);
 
-    // Reset and start timer
+    // Timer
     state.timerRemaining = state.timerDuration;
     state.roundStartTime = Date.now();
     _startTimer();
-
-    // Start listening
     RR.Speech.start();
+  }
+
+  function onWordDetected(word) {
+    if (!state.active || !state.currentChallenge) return;
+
+    const responseTime = Date.now() - state.roundStartTime;
+    _clearTimer();
+
+    // Reveal the word
+    $('word-main').textContent = state.currentChallenge.word.toUpperCase();
+
+    state.wordsCorrect++;
+    state.streak++;
+    state.bestStreak = Math.max(state.bestStreak, state.streak);
+
+    const points = RR.Progress.calculateScore(responseTime, state.streak);
+    state.score += points;
+    state.totalResponseTime += responseTime;
+    state.wordsCompleted++;
+
+    RR.Progress.recordWordAttempt(state.currentChallenge.word, true, responseTime);
+
+    $('game-score').textContent = state.score;
+    $('game-streak').textContent = state.streak;
+    $('transcript-text').textContent = `"${word}" \u2713`;
+    $('transcript-text').classList.add('highlight');
+
+    if (state.streak >= 3) {
+      RR.Sounds.streak();
+      const streakEl = $('game-streak');
+      streakEl.classList.add('anim-streak');
+      setTimeout(() => streakEl.classList.remove('anim-streak'), 300);
+    }
+
+    const glow = $('video-glow');
+    glow.classList.add('success');
+    setTimeout(() => glow.classList.remove('success'), 1000);
+
+    _showResult(true, points, responseTime);
+    RR.Sounds.success();
+
+    setTimeout(() => {
+      _hideResult();
+      _nextRound();
+    }, 1200);
   }
 
   function _startTimer() {
@@ -122,7 +174,6 @@ RR.GameModes.SpeedRecall = (function () {
 
       _updateTimerUI();
 
-      // Urgent tick sound in last 3 seconds
       if (state.timerRemaining <= 3 && state.timerRemaining > 0) {
         if (Math.abs(state.timerRemaining - Math.round(state.timerRemaining)) < 0.05) {
           RR.Sounds.urgentTick();
@@ -146,7 +197,6 @@ RR.GameModes.SpeedRecall = (function () {
     fill.style.width = pct + '%';
     label.textContent = Math.ceil(state.timerRemaining) + 's';
 
-    // Color changes
     fill.classList.remove('warning', 'danger');
     label.classList.remove('anim-timer-urgent');
 
@@ -158,58 +208,6 @@ RR.GameModes.SpeedRecall = (function () {
     }
   }
 
-  function onWordDetected(word) {
-    if (!state.active || !state.currentWord) return;
-
-    const responseTime = Date.now() - state.roundStartTime;
-    _clearTimer();
-
-    // Success!
-    state.wordsCorrect++;
-    state.streak++;
-    state.bestStreak = Math.max(state.bestStreak, state.streak);
-
-    // Calculate score
-    const points = RR.Progress.calculateScore(responseTime, state.streak);
-    state.score += points;
-    state.totalResponseTime += responseTime;
-    state.wordsCompleted++;
-
-    // Record word attempt
-    RR.Progress.recordWordAttempt(state.currentWord.word, true, responseTime);
-
-    // Update UI
-    $('game-score').textContent = state.score;
-    $('game-streak').textContent = state.streak;
-    $('transcript-text').textContent = RR.Speech.getTranscript();
-    $('transcript-text').classList.add('highlight');
-
-    // Streak animation
-    if (state.streak >= 3) {
-      RR.Sounds.streak();
-      const streakEl = $('game-streak');
-      streakEl.classList.add('anim-streak');
-      setTimeout(() => streakEl.classList.remove('anim-streak'), 300);
-    }
-
-    // Video glow
-    const glow = $('video-glow');
-    glow.classList.add('success');
-    setTimeout(() => glow.classList.remove('success'), 1000);
-
-    // Show result
-    _showResult(true, points, responseTime);
-
-    // Sound
-    RR.Sounds.success();
-
-    // Next round after brief delay
-    setTimeout(() => {
-      _hideResult();
-      _nextRound();
-    }, 1200);
-  }
-
   function _onTimeUp() {
     if (!state.active) return;
     _clearTimer();
@@ -217,60 +215,49 @@ RR.GameModes.SpeedRecall = (function () {
     state.streak = 0;
     state.wordsCompleted++;
 
-    // Record failed attempt
-    if (state.currentWord) {
-      RR.Progress.recordWordAttempt(state.currentWord.word, false, state.timerDuration * 1000);
+    // Reveal the word
+    if (state.currentChallenge) {
+      $('word-main').textContent = state.currentChallenge.word.toUpperCase();
+      RR.Progress.recordWordAttempt(state.currentChallenge.word, false, state.timerDuration * 1000);
     }
 
-    // Update UI
     $('game-streak').textContent = '0';
 
-    // Video glow
     const glow = $('video-glow');
     glow.classList.add('fail');
     setTimeout(() => glow.classList.remove('fail'), 1000);
 
-    // Show result
     _showResult(false, 0);
-
-    // Sound
     RR.Sounds.fail();
 
-    // Next round after delay
     setTimeout(() => {
       _hideResult();
       _nextRound();
-    }, 1500);
+    }, 2000);
   }
 
   function skip() {
     if (!state.active) return;
     _clearTimer();
-
     state.streak = 0;
     state.wordsCompleted++;
-
     $('game-streak').textContent = '0';
     RR.Sounds.skip();
-
     _nextRound();
   }
 
   function hint() {
-    if (!state.active || !state.currentWord || state.hintUsed) return;
+    if (!state.active || !state.currentChallenge || state.hintUsed) return;
     state.hintUsed = true;
 
-    const word = state.currentWord.word;
-    // Show first 3 letters + blanks
-    const hintText = word.substring(0, 3) + '_ '.repeat(word.length - 3).trim();
-    $('word-example').textContent = `Hint: starts with "${word.substring(0, 3)}..."`;
+    const word = state.currentChallenge.word;
+    $('word-main').textContent = word.charAt(0).toUpperCase() + '_ '.repeat(word.length - 1).trim();
+    $('word-example').textContent = `Hint: starts with "${word.substring(0, 2).toUpperCase()}..." (${word.length} letters)`;
     $('word-example').style.color = 'var(--warning)';
 
     setTimeout(() => {
-      if ($('word-example')) {
-        $('word-example').style.color = '';
-      }
-    }, 3000);
+      if ($('word-example')) $('word-example').style.color = '';
+    }, 4000);
   }
 
   function _showResult(success, points, timeMs) {
@@ -280,24 +267,20 @@ RR.GameModes.SpeedRecall = (function () {
     const pts = $('result-points');
 
     if (success) {
-      icon.textContent = '✓';
+      icon.textContent = '\u2713';
       icon.style.color = 'var(--success)';
-      const timeSec = (timeMs / 1000).toFixed(1);
-      const messages = [
-        'Nice!', 'Great recall!', 'Smooth!', 'Nailed it!',
-        'Sharp!', 'Quick thinking!', 'Impressive!', 'On fire!'
-      ];
+      const messages = ['Great recall!', 'You knew it!', 'Sharp memory!', 'Impressive!', 'Nailed it!'];
       text.textContent = messages[Math.floor(Math.random() * messages.length)];
-      pts.textContent = `+${points}`;
+      pts.textContent = '+' + points;
       pts.className = 'result-points';
-      if (timeMs < RR.Progress.SPEED_BONUS_THRESHOLD) {
-        pts.textContent += ` (${timeSec}s!)`;
+      if (timeMs && timeMs < RR.Progress.SPEED_BONUS_THRESHOLD) {
+        pts.textContent += ' (' + (timeMs / 1000).toFixed(1) + 's!)';
       }
     } else {
-      icon.textContent = '✗';
+      icon.textContent = '\u2717';
       icon.style.color = 'var(--danger)';
-      text.textContent = 'Time\'s up!';
-      pts.textContent = `The word was: ${state.currentWord ? state.currentWord.word : ''}`;
+      text.textContent = "Time's up!";
+      pts.textContent = 'The word was: ' + (state.currentChallenge ? state.currentChallenge.word : '');
       pts.className = 'result-points negative';
     }
 
@@ -316,11 +299,9 @@ RR.GameModes.SpeedRecall = (function () {
     _clearTimer();
     RR.Speech.stop();
 
-    // Calculate XP
     const xpEarned = Math.round(state.score * 0.5);
     const xpResult = RR.Progress.addXP(xpEarned);
 
-    // Record game
     RR.Progress.recordGameResult({
       wordsCompleted: state.wordsCompleted,
       wordsCorrect: state.wordsCorrect,
@@ -330,10 +311,8 @@ RR.GameModes.SpeedRecall = (function () {
       score: state.score,
     });
 
-    // Update streak
     RR.Progress.updateStreak();
 
-    // Show game over screen
     if (RR.App && RR.App.showGameOver) {
       RR.App.showGameOver({
         score: state.score,
@@ -349,10 +328,6 @@ RR.GameModes.SpeedRecall = (function () {
     }
   }
 
-  function getState() {
-    return { ...state };
-  }
-
   return {
     MODE_ID,
     init,
@@ -361,6 +336,5 @@ RR.GameModes.SpeedRecall = (function () {
     skip,
     hint,
     onWordDetected,
-    getState,
   };
 })();

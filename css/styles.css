@@ -769,6 +769,70 @@ a:hover {
   font-weight: 600;
 }
 
+/* Answer Grid */
+.answer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.answer-btn {
+  padding: 14px 12px;
+  text-align: center;
+  font-family: var(--font);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  border: 1px solid var(--glass-border);
+  transition: all var(--transition-fast);
+  line-height: 1.4;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.answer-btn:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: var(--glass-hover);
+  transform: translateY(-1px);
+}
+.answer-btn:active {
+  transform: translateY(0);
+}
+.answer-btn.correct {
+  border-color: var(--success);
+  background: rgba(34, 211, 167, 0.15);
+  color: var(--success);
+  box-shadow: 0 0 20px var(--success-glow);
+}
+.answer-btn.wrong {
+  border-color: var(--danger);
+  background: rgba(244, 88, 122, 0.15);
+  color: var(--danger);
+  box-shadow: 0 0 20px var(--danger-glow);
+}
+.answer-btn.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.answer-btn.highlight-word {
+  border-color: var(--accent);
+  background: rgba(124, 92, 252, 0.1);
+  color: var(--accent-light);
+  font-weight: 700;
+  font-size: 1rem;
+}
+.answer-grid.display-only .answer-btn {
+  cursor: default;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.answer-grid.display-only .answer-btn:hover {
+  transform: none;
+  border-color: var(--glass-border);
+  background: var(--glass-bg);
+}
+
 /* Game Actions */
 .game-actions {
   display: flex;

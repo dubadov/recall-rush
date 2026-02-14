@@ -202,3 +202,38 @@
 .anim-timer-urgent {
   animation: timerUrgent 0.5s ease infinite;
 }
+
+/* ---------- Answer Correct Pop ---------- */
+@keyframes answerCorrect {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.anim-answer-correct {
+  animation: answerCorrect 0.35s var(--ease-spring) both;
+}
+
+/* ---------- Answer Wrong Shake ---------- */
+@keyframes answerWrong {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+.anim-answer-wrong {
+  animation: answerWrong 0.4s ease both;
+}
+
+/* ---------- Answer Grid Slide In ---------- */
+@keyframes gridSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.anim-grid-enter {
+  animation: gridSlideIn 0.3s var(--ease-out) both;
+}

@@ -1,29 +1,26 @@
 /* ================================================
-   Word Bomb - Defuse the bomb by saying the word
-   Timer shrinks each level, 3 lives
+   Word Upgrade - Speech-based
+   Common word shown, say a more elevated synonym
+   Multiple correct answers accepted
    ================================================ */
 window.RR = window.RR || {};
 RR.GameModes = RR.GameModes || {};
 
-RR.GameModes.WordBomb = (function () {
-  const MODE_ID = 'word-bomb';
-  const STARTING_TIME = 12;
-  const TIME_REDUCTION = 0.5;  // Reduce time each round
-  const MIN_TIME = 4;
-  const STARTING_LIVES = 3;
+RR.GameModes.WordUpgrade = (function () {
+  const MODE_ID = 'word-upgrade';
+  const ROUND_COUNT = 10;
 
   let state = {
     active: false,
     score: 0,
     streak: 0,
     bestStreak: 0,
-    lives: STARTING_LIVES,
     wordsCompleted: 0,
     wordsCorrect: 0,
     roundIndex: 0,
-    currentWord: null,
-    currentTime: STARTING_TIME,
-    timerRemaining: STARTING_TIME,
+    currentChallenge: null,
+    timerDuration: 10,
+    timerRemaining: 10,
     timerInterval: null,
     roundStartTime: 0,
     totalResponseTime: 0,
@@ -40,26 +37,26 @@ RR.GameModes.WordBomb = (function () {
       score: 0,
       streak: 0,
       bestStreak: 0,
-      lives: STARTING_LIVES,
       wordsCompleted: 0,
       wordsCorrect: 0,
       roundIndex: 0,
-      currentWord: null,
-      currentTime: STARTING_TIME,
-      timerRemaining: STARTING_TIME,
+      currentChallenge: null,
+      timerDuration: settings.timerDuration,
+      timerRemaining: settings.timerDuration,
       timerInterval: null,
       roundStartTime: 0,
       totalResponseTime: 0,
     };
 
-    await RR.Vocabulary.loadWords(settings.difficulty, settings.category);
+    RR.Vocabulary.resetUsedIndices();
 
-    $('game-mode-title').textContent = 'Word Bomb';
+    // UI setup - speech mode, no answer grid
+    $('game-mode-title').textContent = 'Word Upgrade';
     $('game-score').textContent = '0';
-    $('game-streak').textContent = STARTING_LIVES + ' ❤';
-
-    // Show bomb, hide regular timer
-    $('bomb-container').style.display = 'flex';
+    $('game-streak').textContent = '0';
+    $('transcript-bar').style.display = '';
+    $('answer-grid').style.display = 'none';
+    $('bomb-container').style.display = 'none';
 
     _nextRound();
   }
@@ -68,18 +65,17 @@ RR.GameModes.WordBomb = (function () {
     state.active = false;
     _clearTimer();
     RR.Speech.stop();
-    $('bomb-container').style.display = 'none';
   }
 
   function _nextRound() {
     if (!state.active) return;
 
-    if (state.lives <= 0) {
+    if (state.roundIndex >= ROUND_COUNT) {
       _endGame();
       return;
     }
 
-    state.currentWord = RR.Vocabulary.getNextWord();
+    state.currentChallenge = RR.Vocabulary.getUpgradeChallenge();
     state.roundIndex++;
 
     // Animate word card
@@ -88,28 +84,63 @@ RR.GameModes.WordBomb = (function () {
     void wordCard.offsetWidth;
     wordCard.classList.add('anim-word-enter');
 
-    // Display word
-    $('word-main').textContent = state.currentWord.word.toUpperCase();
-    $('word-definition').textContent = state.currentWord.definition;
-    $('word-example').textContent = `"${state.currentWord.example}"`;
+    // Show the common word - player must say an upgraded synonym
+    $('word-main').textContent = state.currentChallenge.commonWord.toUpperCase();
+    $('word-main').style.fontSize = '';
+    $('word-main').style.lineHeight = '';
+    $('word-definition').textContent = 'Say a more elevated word!';
+    $('word-example').textContent = `Round ${state.roundIndex} of ${ROUND_COUNT}`;
     $('transcript-text').textContent = 'Listening...';
     $('transcript-text').classList.remove('highlight');
 
-    // Set speech target
-    RR.Speech.setTarget(state.currentWord.word);
+    // Set speech targets to all valid upgrades
+    RR.Speech.setTarget(null, state.currentChallenge.acceptedUpgrades);
 
-    // Timer gets shorter each round
-    state.currentTime = Math.max(MIN_TIME, STARTING_TIME - (state.roundIndex - 1) * TIME_REDUCTION);
-    state.timerRemaining = state.currentTime;
+    // Timer
+    state.timerRemaining = state.timerDuration;
     state.roundStartTime = Date.now();
-
-    // Update bomb display
-    _updateBombUI();
-    const bombBody = $('bomb-body');
-    bombBody.classList.remove('critical', 'anim-bomb-shake', 'anim-bomb-explode');
-
     _startTimer();
     RR.Speech.start();
+  }
+
+  function onWordDetected(word) {
+    if (!state.active || !state.currentChallenge) return;
+
+    const responseTime = Date.now() - state.roundStartTime;
+    _clearTimer();
+
+    state.wordsCorrect++;
+    state.streak++;
+    state.bestStreak = Math.max(state.bestStreak, state.streak);
+
+    const points = RR.Progress.calculateScore(responseTime, state.streak);
+    state.score += points;
+    state.totalResponseTime += responseTime;
+    state.wordsCompleted++;
+
+    $('game-score').textContent = state.score;
+    $('game-streak').textContent = state.streak;
+    $('transcript-text').textContent = `"${word}" \u2713`;
+    $('transcript-text').classList.add('highlight');
+
+    if (state.streak >= 3) {
+      RR.Sounds.streak();
+      const streakEl = $('game-streak');
+      streakEl.classList.add('anim-streak');
+      setTimeout(() => streakEl.classList.remove('anim-streak'), 300);
+    }
+
+    const glow = $('video-glow');
+    glow.classList.add('success');
+    setTimeout(() => glow.classList.remove('success'), 1000);
+
+    _showResult(true, points, word);
+    RR.Sounds.success();
+
+    setTimeout(() => {
+      _hideResult();
+      _nextRound();
+    }, 1000);
   }
 
   function _startTimer() {
@@ -121,17 +152,14 @@ RR.GameModes.WordBomb = (function () {
 
       if (state.timerRemaining <= 0) {
         state.timerRemaining = 0;
-        _onExplode();
+        _onTimeUp();
       }
 
       _updateTimerUI();
-      _updateBombUI();
 
-      // Critical state
-      if (state.timerRemaining <= 3) {
-        $('bomb-body').classList.add('critical');
-        if (state.timerRemaining <= 2) {
-          $('bomb-body').classList.add('anim-bomb-shake');
+      if (state.timerRemaining <= 3 && state.timerRemaining > 0) {
+        if (Math.abs(state.timerRemaining - Math.round(state.timerRemaining)) < 0.05) {
+          RR.Sounds.urgentTick();
         }
       }
     }, 100);
@@ -147,128 +175,82 @@ RR.GameModes.WordBomb = (function () {
   function _updateTimerUI() {
     const fill = $('timer-fill');
     const label = $('timer-text');
-    const pct = (state.timerRemaining / state.currentTime) * 100;
+    const pct = (state.timerRemaining / state.timerDuration) * 100;
 
     fill.style.width = pct + '%';
     label.textContent = Math.ceil(state.timerRemaining) + 's';
 
     fill.classList.remove('warning', 'danger');
-    if (pct <= 20) fill.classList.add('danger');
-    else if (pct <= 40) fill.classList.add('warning');
+    label.classList.remove('anim-timer-urgent');
+
+    if (pct <= 20) {
+      fill.classList.add('danger');
+      label.classList.add('anim-timer-urgent');
+    } else if (pct <= 40) {
+      fill.classList.add('warning');
+    }
   }
 
-  function _updateBombUI() {
-    $('bomb-timer').textContent = Math.ceil(state.timerRemaining);
-
-    // Fuse position
-    const fuse = $('bomb-fuse');
-    const pct = state.timerRemaining / state.currentTime;
-    fuse.style.height = Math.max(5, pct * 40) + 'px';
-  }
-
-  function onWordDetected(word) {
-    if (!state.active || !state.currentWord) return;
-
-    const responseTime = Date.now() - state.roundStartTime;
-    _clearTimer();
-
-    state.wordsCorrect++;
-    state.streak++;
-    state.bestStreak = Math.max(state.bestStreak, state.streak);
-
-    const points = RR.Progress.calculateScore(responseTime, state.streak);
-    state.score += points;
-    state.totalResponseTime += responseTime;
-    state.wordsCompleted++;
-
-    RR.Progress.recordWordAttempt(state.currentWord.word, true, responseTime);
-
-    // Update UI
-    $('game-score').textContent = state.score;
-    $('transcript-text').textContent = RR.Speech.getTranscript();
-    $('transcript-text').classList.add('highlight');
-
-    // Video glow
-    const glow = $('video-glow');
-    glow.classList.add('success');
-    setTimeout(() => glow.classList.remove('success'), 1000);
-
-    // Defuse animation
-    _showResult(true, points, responseTime);
-    RR.Sounds.success();
-
-    setTimeout(() => {
-      _hideResult();
-      _nextRound();
-    }, 1200);
-  }
-
-  function _onExplode() {
+  function _onTimeUp() {
     if (!state.active) return;
     _clearTimer();
 
-    state.lives--;
     state.streak = 0;
     state.wordsCompleted++;
 
-    if (state.currentWord) {
-      RR.Progress.recordWordAttempt(state.currentWord.word, false, state.currentTime * 1000);
-    }
+    $('game-streak').textContent = '0';
 
-    // Update lives display
-    $('game-streak').textContent = state.lives + ' ❤';
-
-    // Bomb explode animation
-    $('bomb-body').classList.add('anim-bomb-explode');
-    RR.Sounds.bomb();
-
-    // Video glow
     const glow = $('video-glow');
     glow.classList.add('fail');
     setTimeout(() => glow.classList.remove('fail'), 1000);
 
-    _showResult(false, 0);
+    const synonymList = state.currentChallenge ? state.currentChallenge.acceptedUpgrades.slice(0, 3).join(', ') : '';
+    _showResult(false, 0, synonymList);
+    RR.Sounds.fail();
 
     setTimeout(() => {
       _hideResult();
-      $('bomb-body').classList.remove('anim-bomb-explode');
       _nextRound();
-    }, 1500);
+    }, 1800);
   }
 
   function skip() {
     if (!state.active) return;
     _clearTimer();
+    state.streak = 0;
     state.wordsCompleted++;
+    $('game-streak').textContent = '0';
     RR.Sounds.skip();
     _nextRound();
   }
 
   function hint() {
-    if (!state.active || !state.currentWord) return;
-    const word = state.currentWord.word;
-    $('word-example').textContent = `Hint: starts with "${word.substring(0, 3)}..."`;
+    if (!state.active || !state.currentChallenge) return;
+    const upgrades = state.currentChallenge.acceptedUpgrades;
+    // Show first letter of each accepted word
+    const hints = upgrades.slice(0, 4).map(s => s.charAt(0).toUpperCase() + '...').join(', ');
+    $('word-example').textContent = `Hints: ${hints}`;
     $('word-example').style.color = 'var(--warning)';
     setTimeout(() => { if ($('word-example')) $('word-example').style.color = ''; }, 3000);
   }
 
-  function _showResult(success, points, timeMs) {
+  function _showResult(success, points, extra) {
     const overlay = $('result-overlay');
     const icon = $('result-icon');
     const text = $('result-text');
     const pts = $('result-points');
 
     if (success) {
-      icon.textContent = '✓';
+      icon.textContent = '\u2713';
       icon.style.color = 'var(--success)';
-      text.textContent = 'Defused!';
-      pts.textContent = `+${points}`;
+      text.textContent = `"${extra}" \u2014 upgraded!`;
+      pts.textContent = '+' + points;
       pts.className = 'result-points';
     } else {
-      icon.textContent = '💥';
+      icon.textContent = '\u2717';
       icon.style.color = 'var(--danger)';
-      text.textContent = state.lives > 0 ? `💣 ${state.lives} lives left` : 'BOOM! Game Over';
-      pts.textContent = state.currentWord ? state.currentWord.word : '';
+      text.textContent = "Time's up!";
+      pts.textContent = extra ? 'Try: ' + extra : '';
       pts.className = 'result-points negative';
     }
 
@@ -286,7 +268,6 @@ RR.GameModes.WordBomb = (function () {
     state.active = false;
     _clearTimer();
     RR.Speech.stop();
-    $('bomb-container').style.display = 'none';
 
     const xpEarned = Math.round(state.score * 0.5);
     const xpResult = RR.Progress.addXP(xpEarned);
