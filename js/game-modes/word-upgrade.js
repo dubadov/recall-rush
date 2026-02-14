@@ -19,6 +19,7 @@ RR.GameModes.WordUpgrade = (function () {
     wordsCorrect: 0,
     roundIndex: 0,
     currentChallenge: null,
+    difficulty: 3,
     timerDuration: 10,
     timerRemaining: 10,
     timerInterval: null,
@@ -32,6 +33,8 @@ RR.GameModes.WordUpgrade = (function () {
 
   async function start() {
     const settings = RR.Storage.getSettings();
+    const diff = settings.difficulty;
+    const timer = RR.Vocabulary.getTimerForDifficulty(diff);
     state = {
       active: true,
       score: 0,
@@ -41,8 +44,9 @@ RR.GameModes.WordUpgrade = (function () {
       wordsCorrect: 0,
       roundIndex: 0,
       currentChallenge: null,
-      timerDuration: settings.timerDuration,
-      timerRemaining: settings.timerDuration,
+      difficulty: diff,
+      timerDuration: timer,
+      timerRemaining: timer,
       timerInterval: null,
       roundStartTime: 0,
       totalResponseTime: 0,
@@ -75,7 +79,7 @@ RR.GameModes.WordUpgrade = (function () {
       return;
     }
 
-    state.currentChallenge = RR.Vocabulary.getUpgradeChallenge();
+    state.currentChallenge = RR.Vocabulary.getUpgradeChallenge(state.difficulty);
     state.roundIndex++;
 
     // Animate word card

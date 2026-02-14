@@ -16,6 +16,15 @@ RR.App = (function () {
     'word-upgrade': RR.GameModes.WordUpgrade,
   };
 
+  const DIFF_NAMES = { 1: 'Beginner', 2: 'Easy', 3: 'Medium', 4: 'Hard', 5: 'Master' };
+  const DIFF_INFOS = {
+    1: 'Common words \u2022 20s timer',
+    2: 'Simple words \u2022 15s timer',
+    3: 'Balanced words \u2022 10s timer',
+    4: 'Advanced words \u2022 7s timer',
+    5: 'Expert words \u2022 5s timer',
+  };
+
   const $ = (id) => document.getElementById(id);
 
   // ---- Screen Navigation ----
@@ -45,6 +54,7 @@ RR.App = (function () {
 
     _bindEvents();
     _initSpeech();
+    _syncDifficultyUI();
   }
 
   function _initSpeech() {
@@ -68,6 +78,34 @@ RR.App = (function () {
     };
   }
 
+  // ---- Difficulty UI sync ----
+  function _syncDifficultyUI() {
+    const settings = RR.Storage.getSettings();
+    const level = settings.difficulty;
+    _updateDifficultySelector(level);
+  }
+
+  function _updateDifficultySelector(level) {
+    // Menu selector buttons
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.level) === level);
+    });
+    const nameEl = $('diff-level-name');
+    if (nameEl) nameEl.textContent = DIFF_NAMES[level] || 'Medium';
+    const infoEl = $('diff-info');
+    if (infoEl) infoEl.textContent = DIFF_INFOS[level] || '';
+
+    // Settings dropdown
+    const settingsDiff = $('setting-difficulty');
+    if (settingsDiff) settingsDiff.value = level;
+  }
+
+  function _setDifficulty(level) {
+    level = Math.max(1, Math.min(5, parseInt(level) || 3));
+    RR.Storage.set('difficulty', level);
+    _updateDifficultySelector(level);
+  }
+
   // ---- Event Binding ----
   function _bindEvents() {
     // Setup screen
@@ -75,6 +113,13 @@ RR.App = (function () {
     $('skip-api-key').addEventListener('click', _onSkipApiKey);
     $('api-key-input').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') _onSaveApiKey();
+    });
+
+    // Difficulty selector on menu
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        _setDifficulty(parseInt(btn.dataset.level));
+      });
     });
 
     // Mode cards
@@ -118,6 +163,7 @@ RR.App = (function () {
         if (target === 'menu') {
           showScreen('menu');
           _updateMenuStats();
+          _syncDifficultyUI();
         } else if (target === 'stats') {
           _updateStatsScreen();
           showScreen('stats');
@@ -139,6 +185,7 @@ RR.App = (function () {
       _saveSettingsFromUI();
       showScreen('menu');
       _updateMenuStats();
+      _syncDifficultyUI();
     });
     $('save-settings-api').addEventListener('click', () => {
       const key = $('settings-api-key').value.trim();
@@ -151,8 +198,10 @@ RR.App = (function () {
     $('reset-progress').addEventListener('click', () => {
       if (confirm('Are you sure? This will reset all your progress, XP, and statistics.')) {
         const apiKey = RR.Storage.get('apiKey');
+        const difficulty = RR.Storage.get('difficulty');
         RR.Storage.resetAll();
         RR.Storage.set('apiKey', apiKey);
+        RR.Storage.set('difficulty', difficulty);
         RR.Storage.set('setupComplete', true);
         _updateMenuStats();
         alert('Progress has been reset.');
@@ -160,8 +209,9 @@ RR.App = (function () {
     });
 
     // Settings auto-save on change
-    ['setting-timer', 'setting-difficulty', 'setting-category'].forEach(id => {
-      $(id).addEventListener('change', _saveSettingsFromUI);
+    ['setting-difficulty', 'setting-category'].forEach(id => {
+      const el = $(id);
+      if (el) el.addEventListener('change', _saveSettingsFromUI);
     });
 
     // Daily challenge
@@ -179,12 +229,14 @@ RR.App = (function () {
     RR.Storage.set('setupComplete', true);
     showScreen('menu');
     _updateMenuStats();
+    _syncDifficultyUI();
   }
 
   function _onSkipApiKey() {
     RR.Storage.set('setupComplete', true);
     showScreen('menu');
     _updateMenuStats();
+    _syncDifficultyUI();
   }
 
   // ---- Game Lifecycle ----
@@ -251,6 +303,7 @@ RR.App = (function () {
     activeGame = null;
     showScreen('menu');
     _updateMenuStats();
+    _syncDifficultyUI();
   }
 
   function _onPlayAgain() {
@@ -345,18 +398,19 @@ RR.App = (function () {
   // ---- Settings ----
   function _loadSettings() {
     const settings = RR.Storage.getSettings();
-    $('setting-timer').value = settings.timerDuration;
     $('setting-difficulty').value = settings.difficulty;
     $('setting-category').value = settings.category;
     $('settings-api-key').value = settings.apiKey || '';
   }
 
   function _saveSettingsFromUI() {
+    const newDifficulty = parseInt($('setting-difficulty').value) || 3;
     RR.Storage.saveSettings({
-      timerDuration: parseInt($('setting-timer').value),
-      difficulty: $('setting-difficulty').value,
+      difficulty: newDifficulty,
       category: $('setting-category').value,
     });
+    // Also sync the menu selector
+    _updateDifficultySelector(newDifficulty);
   }
 
   return {

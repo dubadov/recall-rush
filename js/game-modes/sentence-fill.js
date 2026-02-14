@@ -9,7 +9,6 @@ RR.GameModes = RR.GameModes || {};
 RR.GameModes.SentenceFill = (function () {
   const MODE_ID = 'sentence-fill';
   const ROUND_COUNT = 10;
-  const TIMER_REDUCTION = 0.4; // Use 60% of normal timer for pressure
 
   let state = {
     active: false,
@@ -20,8 +19,9 @@ RR.GameModes.SentenceFill = (function () {
     wordsCorrect: 0,
     roundIndex: 0,
     currentChallenge: null,
-    timerDuration: 6,
-    timerRemaining: 6,
+    difficulty: 3,
+    timerDuration: 10,
+    timerRemaining: 10,
     timerInterval: null,
     roundStartTime: 0,
     totalResponseTime: 0,
@@ -33,8 +33,8 @@ RR.GameModes.SentenceFill = (function () {
 
   async function start() {
     const settings = RR.Storage.getSettings();
-    // Tight timer: reduce the user's setting for pressure
-    const tightTimer = Math.max(5, Math.round(settings.timerDuration * (1 - TIMER_REDUCTION)));
+    const diff = settings.difficulty;
+    const timer = RR.Vocabulary.getTimerForDifficulty(diff);
 
     state = {
       active: true,
@@ -45,8 +45,9 @@ RR.GameModes.SentenceFill = (function () {
       wordsCorrect: 0,
       roundIndex: 0,
       currentChallenge: null,
-      timerDuration: tightTimer,
-      timerRemaining: tightTimer,
+      difficulty: diff,
+      timerDuration: timer,
+      timerRemaining: timer,
       timerInterval: null,
       roundStartTime: 0,
       totalResponseTime: 0,
@@ -83,7 +84,7 @@ RR.GameModes.SentenceFill = (function () {
       return;
     }
 
-    state.currentChallenge = RR.Vocabulary.getSentenceChallenge();
+    state.currentChallenge = RR.Vocabulary.getSentenceChallenge(state.difficulty);
     state.roundIndex++;
 
     // Animate word card

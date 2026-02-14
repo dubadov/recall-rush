@@ -9,8 +9,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/rtl.css">
 </head>
 <body>
+  <!-- Language Toggle (floating, visible on all screens) -->
+  <button id="lang-toggle" class="lang-toggle" aria-label="Switch language">עב</button>
+
   <div id="app">
 
     <!-- ============ SETUP SCREEN ============ -->
@@ -18,18 +22,18 @@
       <div class="screen-content setup-layout">
         <div class="setup-hero">
           <div class="logo-mark">R</div>
-          <h1 class="logo-title">Recall Rush</h1>
-          <p class="logo-subtitle">Master your vocabulary under pressure</p>
+          <h1 class="logo-title" data-i18n="logoTitle">Recall Rush</h1>
+          <p class="logo-subtitle" data-i18n="logoSubtitle">Master your vocabulary under pressure</p>
         </div>
         <div class="setup-card glass-card">
-          <h2>Get Started</h2>
-          <p class="setup-desc">Enter your free Groq API key for AI-generated vocabulary, or skip to use the built-in word bank.</p>
+          <h2 data-i18n="getStarted">Get Started</h2>
+          <p class="setup-desc" data-i18n="setupDesc">Enter your free Groq API key for AI-generated vocabulary, or skip to use the built-in word bank.</p>
           <div class="input-group">
             <input type="password" id="api-key-input" class="input-field" placeholder="gsk_..." autocomplete="off" />
-            <a href="https://console.groq.com" target="_blank" class="input-hint-link">Get free key</a>
+            <a href="https://console.groq.com" target="_blank" class="input-hint-link" data-i18n="getFreeKey">Get free key</a>
           </div>
-          <button id="save-api-key" class="btn btn-primary">Save & Start</button>
-          <button id="skip-api-key" class="btn btn-ghost">Skip for now</button>
+          <button id="save-api-key" class="btn btn-primary" data-i18n="saveAndStart">Save & Start</button>
+          <button id="skip-api-key" class="btn btn-ghost" data-i18n="skipForNow">Skip for now</button>
         </div>
       </div>
     </section>
@@ -44,26 +48,42 @@
           <div class="menu-header-right">
             <div class="header-stat">
               <span class="header-stat-value" id="menu-xp">0</span>
-              <span class="header-stat-label">XP</span>
+              <span class="header-stat-label" data-i18n="xpLabel">XP</span>
             </div>
             <div class="header-stat">
               <span class="header-stat-value" id="menu-level">1</span>
-              <span class="header-stat-label">Level</span>
+              <span class="header-stat-label" data-i18n="levelLabel">Level</span>
             </div>
             <div class="header-stat streak-stat">
               <span class="header-stat-value" id="menu-streak">0</span>
-              <span class="header-stat-label">Streak</span>
+              <span class="header-stat-label" data-i18n="streakLabel">Streak</span>
             </div>
           </div>
         </header>
 
         <!-- Daily Challenge Banner -->
         <div class="daily-banner glass-card" id="daily-challenge">
-          <div class="daily-badge">DAILY</div>
+          <div class="daily-badge" data-i18n="dailyBadge">DAILY</div>
           <div class="daily-info">
-            <p class="daily-text" id="daily-challenge-text">Complete all 10 rounds in Definition Match</p>
+            <p class="daily-text" id="daily-challenge-text" data-i18n="dailyText">Complete all 10 rounds in Definition Match</p>
           </div>
-          <button class="btn btn-accent btn-sm" id="start-daily">Go</button>
+          <button class="btn btn-accent btn-sm" id="start-daily" data-i18n="dailyGo">Go</button>
+        </div>
+
+        <!-- Global Difficulty Selector -->
+        <div class="difficulty-selector glass-card" id="difficulty-selector">
+          <div class="diff-header">
+            <span class="diff-label">Difficulty</span>
+            <span class="diff-level-name" id="diff-level-name">Medium</span>
+          </div>
+          <div class="diff-buttons">
+            <button class="diff-btn" data-level="1"><span class="diff-num">1</span><span class="diff-name">Beginner</span></button>
+            <button class="diff-btn" data-level="2"><span class="diff-num">2</span><span class="diff-name">Easy</span></button>
+            <button class="diff-btn active" data-level="3"><span class="diff-num">3</span><span class="diff-name">Medium</span></button>
+            <button class="diff-btn" data-level="4"><span class="diff-num">4</span><span class="diff-name">Hard</span></button>
+            <button class="diff-btn" data-level="5"><span class="diff-num">5</span><span class="diff-name">Master</span></button>
+          </div>
+          <div class="diff-info" id="diff-info">Balanced words &bull; 10s timer</div>
         </div>
 
         <!-- Game Mode Cards -->
@@ -71,8 +91,8 @@
           <div class="mode-card glass-card" data-mode="definition-match">
             <div class="mode-icon-wrap"><span class="mode-icon">&#128218;</span></div>
             <div class="mode-info">
-              <h3>Definition Match</h3>
-              <p>Pick the correct definition for each word</p>
+              <h3 data-i18n="definitionMatchTitle">Definition Match</h3>
+              <p data-i18n="definitionMatchDesc">Pick the correct definition for each word</p>
             </div>
             <div class="mode-meta">
               <span class="difficulty-dot dot-green"></span>
@@ -83,8 +103,8 @@
           <div class="mode-card glass-card" data-mode="sentence-fill">
             <div class="mode-icon-wrap"><span class="mode-icon">&#128172;</span></div>
             <div class="mode-info">
-              <h3>Sentence Fill</h3>
-              <p>Say the word that best completes the sentence</p>
+              <h3 data-i18n="sentenceFillTitle">Sentence Fill</h3>
+              <p data-i18n="sentenceFillDesc">Say the word that best completes the sentence</p>
             </div>
             <div class="mode-meta">
               <span class="difficulty-dot dot-yellow"></span>
@@ -95,8 +115,8 @@
           <div class="mode-card glass-card" data-mode="recall-challenge">
             <div class="mode-icon-wrap"><span class="mode-icon">&#129504;</span></div>
             <div class="mode-info">
-              <h3>Recall Challenge</h3>
-              <p>See the definition, say the word from memory</p>
+              <h3 data-i18n="recallChallengeTitle">Recall Challenge</h3>
+              <p data-i18n="recallChallengeDesc">See the definition, say the word from memory</p>
             </div>
             <div class="mode-meta">
               <span class="difficulty-dot dot-orange"></span>
@@ -107,8 +127,8 @@
           <div class="mode-card glass-card" data-mode="word-upgrade">
             <div class="mode-icon-wrap"><span class="mode-icon">&#11014;</span></div>
             <div class="mode-info">
-              <h3>Word Upgrade</h3>
-              <p>Replace the common word with a more elevated synonym</p>
+              <h3 data-i18n="wordUpgradeTitle">Word Upgrade</h3>
+              <p data-i18n="wordUpgradeDesc">Replace the common word with a more elevated synonym</p>
             </div>
             <div class="mode-meta">
               <span class="difficulty-dot dot-red"></span>
@@ -121,15 +141,15 @@
         <nav class="bottom-nav">
           <button class="nav-btn active" data-nav="menu">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span>Home</span>
+            <span data-i18n="navHome">Home</span>
           </button>
           <button class="nav-btn" data-nav="stats">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="2" y="13" width="4" height="8"/></svg>
-            <span>Stats</span>
+            <span data-i18n="navStats">Stats</span>
           </button>
           <button class="nav-btn" data-nav="settings">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            <span>Settings</span>
+            <span data-i18n="navSettings">Settings</span>
           </button>
         </nav>
       </div>
@@ -147,11 +167,11 @@
           <div class="game-header-stats">
             <div class="game-stat">
               <span class="game-stat-value" id="game-score">0</span>
-              <span class="game-stat-label">pts</span>
+              <span class="game-stat-label" data-i18n="ptsLabel">pts</span>
             </div>
             <div class="game-stat streak-active">
               <span class="game-stat-value" id="game-streak">0</span>
-              <span class="game-stat-label">streak</span>
+              <span class="game-stat-label" data-i18n="streakStatLabel">streak</span>
             </div>
           </div>
         </header>
@@ -185,13 +205,13 @@
           <div class="transcript-mic">
             <div class="mic-pulse"></div>
           </div>
-          <span class="transcript-text" id="transcript-text">Listening...</span>
+          <span class="transcript-text" id="transcript-text" data-i18n="listening">Listening...</span>
         </div>
 
         <!-- Actions -->
         <div class="game-actions">
-          <button class="btn btn-ghost-sm" id="btn-skip">Skip</button>
-          <button class="btn btn-ghost-sm" id="btn-hint">Hint</button>
+          <button class="btn btn-ghost-sm" id="btn-skip" data-i18n="skipBtn">Skip</button>
+          <button class="btn btn-ghost-sm" id="btn-hint" data-i18n="hintBtn">Hint</button>
         </div>
 
         <!-- Word Bomb Container (hidden by default) -->
@@ -226,32 +246,32 @@
     <section id="screen-gameover" class="screen">
       <div class="screen-content gameover-layout">
         <div class="gameover-hero">
-          <h2 class="gameover-label">Game Over</h2>
+          <h2 class="gameover-label" data-i18n="gameOver">Game Over</h2>
           <div class="gameover-score" id="final-score">0</div>
-          <div class="gameover-score-label">points</div>
+          <div class="gameover-score-label" data-i18n="pointsLabel">points</div>
         </div>
         <div class="gameover-stats glass-card">
           <div class="go-stat">
             <span class="go-stat-value" id="go-words-completed">0</span>
-            <span class="go-stat-label">Words</span>
+            <span class="go-stat-label" data-i18n="wordsLabel">Words</span>
           </div>
           <div class="go-stat">
             <span class="go-stat-value" id="go-accuracy">0%</span>
-            <span class="go-stat-label">Accuracy</span>
+            <span class="go-stat-label" data-i18n="accuracyLabel">Accuracy</span>
           </div>
           <div class="go-stat">
             <span class="go-stat-value" id="go-best-streak">0</span>
-            <span class="go-stat-label">Best Streak</span>
+            <span class="go-stat-label" data-i18n="bestStreakLabel">Best Streak</span>
           </div>
           <div class="go-stat">
             <span class="go-stat-value" id="go-xp-earned">+0</span>
-            <span class="go-stat-label">XP Earned</span>
+            <span class="go-stat-label" data-i18n="xpEarnedLabel">XP Earned</span>
           </div>
         </div>
         <div class="gameover-actions">
-          <button class="btn btn-accent" id="btn-continue-sentence" style="display:none;">Continue to Sentence Fill &rarr;</button>
-          <button class="btn btn-primary" id="btn-play-again">Play Again</button>
-          <button class="btn btn-ghost" id="btn-back-menu">Back to Menu</button>
+          <button class="btn btn-accent" id="btn-continue-sentence" style="display:none;" data-i18n="continueSentence">Continue to Sentence Fill</button>
+          <button class="btn btn-primary" id="btn-play-again" data-i18n="playAgain">Play Again</button>
+          <button class="btn btn-ghost" id="btn-back-menu" data-i18n="backToMenu">Back to Menu</button>
         </div>
       </div>
     </section>
@@ -263,52 +283,52 @@
           <button class="btn btn-icon" id="stats-back">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
-          <h2>Statistics</h2>
+          <h2 data-i18n="statisticsTitle">Statistics</h2>
           <div></div>
         </header>
         <div class="stats-grid">
           <div class="stat-card glass-card">
             <div class="stat-card-value" id="stat-total-words">0</div>
-            <div class="stat-card-label">Words Completed</div>
+            <div class="stat-card-label" data-i18n="wordsCompleted">Words Completed</div>
           </div>
           <div class="stat-card glass-card">
             <div class="stat-card-value" id="stat-accuracy">0%</div>
-            <div class="stat-card-label">Accuracy</div>
+            <div class="stat-card-label" data-i18n="accuracyLabel">Accuracy</div>
           </div>
           <div class="stat-card glass-card">
             <div class="stat-card-value" id="stat-avg-time">0s</div>
-            <div class="stat-card-label">Avg Response</div>
+            <div class="stat-card-label" data-i18n="avgResponse">Avg Response</div>
           </div>
           <div class="stat-card glass-card">
             <div class="stat-card-value" id="stat-best-streak">0</div>
-            <div class="stat-card-label">Best Streak</div>
+            <div class="stat-card-label" data-i18n="bestStreakLabel">Best Streak</div>
           </div>
           <div class="stat-card glass-card">
             <div class="stat-card-value" id="stat-games-played">0</div>
-            <div class="stat-card-label">Games Played</div>
+            <div class="stat-card-label" data-i18n="gamesPlayed">Games Played</div>
           </div>
           <div class="stat-card glass-card">
             <div class="stat-card-value" id="stat-total-xp">0</div>
-            <div class="stat-card-label">Total XP</div>
+            <div class="stat-card-label" data-i18n="totalXP">Total XP</div>
           </div>
         </div>
-        <h3 class="section-subtitle">Words Mastered</h3>
+        <h3 class="section-subtitle" data-i18n="wordsMastered">Words Mastered</h3>
         <div class="mastered-list" id="mastered-list">
-          <p class="empty-state">No words mastered yet. Keep practicing!</p>
+          <p class="empty-state" data-i18n="noWordsMastered">No words mastered yet. Keep practicing!</p>
         </div>
 
         <nav class="bottom-nav">
           <button class="nav-btn" data-nav="menu">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span>Home</span>
+            <span data-i18n="navHome">Home</span>
           </button>
           <button class="nav-btn active" data-nav="stats">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="2" y="13" width="4" height="8"/></svg>
-            <span>Stats</span>
+            <span data-i18n="navStats">Stats</span>
           </button>
           <button class="nav-btn" data-nav="settings">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            <span>Settings</span>
+            <span data-i18n="navSettings">Settings</span>
           </button>
         </nav>
       </div>
@@ -321,72 +341,64 @@
           <button class="btn btn-icon" id="settings-back">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
-          <h2>Settings</h2>
+          <h2 data-i18n="navSettings">Settings</h2>
           <div></div>
         </header>
 
         <div class="settings-group glass-card">
-          <h3 class="settings-group-title">Game</h3>
+          <h3 class="settings-group-title" data-i18n="settingsGameTitle">Game</h3>
           <div class="setting-row">
-            <label for="setting-timer">Timer Duration</label>
-            <select id="setting-timer" class="select-field">
-              <option value="5">5 seconds</option>
-              <option value="7">7 seconds</option>
-              <option value="10" selected>10 seconds</option>
-              <option value="15">15 seconds</option>
-            </select>
-          </div>
-          <div class="setting-row">
-            <label for="setting-difficulty">Difficulty</label>
+            <label data-i18n="difficultyLabel">Difficulty Level</label>
             <select id="setting-difficulty" class="select-field">
-              <option value="beginner">Beginner</option>
-              <option value="intermediate" selected>Intermediate</option>
-              <option value="advanced">Advanced</option>
-              <option value="expert">Expert</option>
+              <option value="1">1 - Beginner</option>
+              <option value="2">2 - Easy</option>
+              <option value="3" selected>3 - Medium</option>
+              <option value="4">4 - Hard</option>
+              <option value="5">5 - Master</option>
             </select>
           </div>
           <div class="setting-row">
-            <label for="setting-category">Category</label>
+            <label for="setting-category" data-i18n="categoryLabel">Category</label>
             <select id="setting-category" class="select-field">
-              <option value="general" selected>General</option>
-              <option value="business">Business</option>
-              <option value="academic">Academic</option>
-              <option value="creative">Creative</option>
+              <option value="general" selected data-i18n="catGeneral">General</option>
+              <option value="business" data-i18n="catBusiness">Business</option>
+              <option value="academic" data-i18n="catAcademic">Academic</option>
+              <option value="creative" data-i18n="catCreative">Creative</option>
             </select>
           </div>
         </div>
 
         <div class="settings-group glass-card">
-          <h3 class="settings-group-title">API</h3>
+          <h3 class="settings-group-title" data-i18n="settingsApiTitle">API</h3>
           <div class="setting-row">
-            <label for="settings-api-key">Groq API Key</label>
+            <label for="settings-api-key" data-i18n="groqApiKey">Groq API Key</label>
             <input type="password" id="settings-api-key" class="input-field input-sm" placeholder="gsk_..." autocomplete="off" />
           </div>
           <div class="setting-row-actions">
-            <button class="btn btn-primary btn-sm" id="save-settings-api">Save Key</button>
-            <a href="https://console.groq.com" target="_blank" class="setting-link">Get free key</a>
+            <button class="btn btn-primary btn-sm" id="save-settings-api" data-i18n="saveKey">Save Key</button>
+            <a href="https://console.groq.com" target="_blank" class="setting-link" data-i18n="getFreeKey">Get free key</a>
           </div>
         </div>
 
         <div class="settings-group glass-card">
-          <h3 class="settings-group-title">Data</h3>
+          <h3 class="settings-group-title" data-i18n="settingsDataTitle">Data</h3>
           <div class="setting-row-actions">
-            <button class="btn btn-danger btn-sm" id="reset-progress">Reset All Progress</button>
+            <button class="btn btn-danger btn-sm" id="reset-progress" data-i18n="resetAllProgress">Reset All Progress</button>
           </div>
         </div>
 
         <nav class="bottom-nav">
           <button class="nav-btn" data-nav="menu">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span>Home</span>
+            <span data-i18n="navHome">Home</span>
           </button>
           <button class="nav-btn" data-nav="stats">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="2" y="13" width="4" height="8"/></svg>
-            <span>Stats</span>
+            <span data-i18n="navStats">Stats</span>
           </button>
           <button class="nav-btn active" data-nav="settings">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            <span>Settings</span>
+            <span data-i18n="navSettings">Settings</span>
           </button>
         </nav>
       </div>
@@ -396,6 +408,7 @@
 
   <!-- Audio context for sound effects -->
   <script src="js/storage.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/sounds.js"></script>
   <script src="js/speech.js"></script>
 

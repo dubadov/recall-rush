@@ -18,6 +18,7 @@ RR.GameModes.DefinitionMatch = (function () {
     wordsCorrect: 0,
     roundIndex: 0,
     currentChallenge: null,
+    difficulty: 3,
     timerDuration: 10,
     timerRemaining: 10,
     timerInterval: null,
@@ -32,6 +33,7 @@ RR.GameModes.DefinitionMatch = (function () {
 
   async function start() {
     const settings = RR.Storage.getSettings();
+    const diff = settings.difficulty;
     state = {
       active: true,
       score: 0,
@@ -41,8 +43,9 @@ RR.GameModes.DefinitionMatch = (function () {
       wordsCorrect: 0,
       roundIndex: 0,
       currentChallenge: null,
-      timerDuration: settings.timerDuration,
-      timerRemaining: settings.timerDuration,
+      difficulty: diff,
+      timerDuration: 10,
+      timerRemaining: 10,
       timerInterval: null,
       roundStartTime: 0,
       totalResponseTime: 0,
@@ -82,7 +85,7 @@ RR.GameModes.DefinitionMatch = (function () {
       return;
     }
 
-    state.currentChallenge = RR.Vocabulary.getDefinitionChallenge();
+    state.currentChallenge = RR.Vocabulary.getDefinitionChallenge(state.difficulty);
     state.roundIndex++;
     state.answered = false;
 
