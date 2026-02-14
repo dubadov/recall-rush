@@ -1,0 +1,204 @@
+/* ================================================
+   RECALL RUSH - Animations
+   ================================================ */
+
+/* ---------- Speaking Bounce ---------- */
+@keyframes speakingBounce {
+  0%, 80%, 100% { transform: scaleY(1); }
+  40% { transform: scaleY(2.5); }
+}
+
+/* ---------- Mic Pulse ---------- */
+@keyframes micPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.3); }
+}
+
+/* ---------- Countdown Pop ---------- */
+@keyframes countdownPop {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ---------- Fuse Spark ---------- */
+@keyframes fuseSpark {
+  0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 10px var(--warning), 0 0 20px var(--warning-glow); }
+  100% { transform: translate(-50%, -50%) scale(1.4); box-shadow: 0 0 20px var(--warning), 0 0 40px var(--warning); }
+}
+
+/* ---------- Success Pulse ---------- */
+@keyframes successPulse {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ---------- Fail Shake ---------- */
+@keyframes failShake {
+  0%, 100% { transform: translateX(0); }
+  10%, 50%, 90% { transform: translateX(-6px); }
+  30%, 70% { transform: translateX(6px); }
+}
+
+/* ---------- Slide In Up ---------- */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Slide In Down ---------- */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Fade In ---------- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ---------- Fade Out ---------- */
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ---------- Scale Pop ---------- */
+@keyframes scalePop {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ---------- Points Float Up ---------- */
+@keyframes pointsFloat {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.8);
+  }
+}
+
+/* ---------- Bomb Shake ---------- */
+@keyframes bombShake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+
+/* ---------- Bomb Explode ---------- */
+@keyframes bombExplode {
+  0% { transform: scale(1); opacity: 1; }
+  30% { transform: scale(1.5); opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+/* ---------- Glow Pulse ---------- */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 10px var(--accent-glow); }
+  50% { box-shadow: 0 0 25px var(--accent-glow), 0 0 50px var(--accent-glow); }
+}
+
+/* ---------- Streak Fire ---------- */
+@keyframes streakFire {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* ---------- Word Enter ---------- */
+@keyframes wordEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ---------- Word Exit ---------- */
+@keyframes wordExit {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.95);
+  }
+}
+
+/* ---------- Timer Urgent Pulse ---------- */
+@keyframes timerUrgent {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ---------- Checkmark Draw ---------- */
+@keyframes checkDraw {
+  0% { stroke-dashoffset: 50; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* ---------- Utility Classes ---------- */
+.anim-slide-up {
+  animation: slideInUp 0.4s var(--ease-out) both;
+}
+.anim-slide-down {
+  animation: slideInDown 0.4s var(--ease-out) both;
+}
+.anim-fade-in {
+  animation: fadeIn 0.3s ease both;
+}
+.anim-fade-out {
+  animation: fadeOut 0.3s ease both;
+}
+.anim-scale-pop {
+  animation: scalePop 0.4s var(--ease-spring) both;
+}
+.anim-success {
+  animation: successPulse 0.5s var(--ease-spring) both;
+}
+.anim-fail {
+  animation: failShake 0.5s ease both;
+}
+.anim-word-enter {
+  animation: wordEnter 0.35s var(--ease-out) both;
+}
+.anim-word-exit {
+  animation: wordExit 0.25s var(--ease-out) both;
+}
+.anim-points-float {
+  animation: pointsFloat 1.2s ease-out both;
+}
+.anim-bomb-shake {
+  animation: bombShake 0.15s ease infinite;
+}
+.anim-bomb-explode {
+  animation: bombExplode 0.6s ease-out both;
+}
+.anim-streak {
+  animation: streakFire 0.3s var(--ease-spring);
+}
+.anim-timer-urgent {
+  animation: timerUrgent 0.5s ease infinite;
+}
