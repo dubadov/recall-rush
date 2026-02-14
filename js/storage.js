@@ -81,7 +81,9 @@ RR.Storage = (function () {
       set('difficulty', num);
       return num;
     }
-    if (typeof val === 'number' && val >= 1 && val <= 5) return val;
+    // Handle numeric strings like "3" from old code
+    const num = typeof val === 'string' ? parseInt(val, 10) : val;
+    if (typeof num === 'number' && !isNaN(num) && num >= 1 && num <= 5) return num;
     return DEFAULTS.difficulty;
   }
 

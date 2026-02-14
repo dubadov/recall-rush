@@ -123,138 +123,138 @@ RR.Vocabulary = (function () {
 
   // ---- Hebrew Sentence Fill bank ----
   const SENTENCE_BANK_HE = [
-    { sentence: 'הוא הביע _____ כלפי ההצעה ולא היה בטוח אם לקבל אותה.', correctWord: 'הסתייגות', distractors: ['התלהבות', 'שמחה', 'הסכמה'] },
-    { sentence: 'הצוות גילה _____ ופעל ליצור את הפרויקט ללא הנחיה.', correctWord: 'יוזמה', distractors: ['עצלות', 'בלבול', 'אדישות'] },
-    { sentence: 'חשוב לשמור על _____ כדי שאנשים יוכלו לסמוך עליך.', correctWord: 'אמינות', distractors: ['סודיות', 'עדינות', 'שקט'] },
-    { sentence: 'היא עמדה בפני _____ - האם לקבל את המשרה או להישאר עם המשפחה.', correctWord: 'דילמה', distractors: ['הזדמנות', 'חגיגה', 'הפסקה'] },
-    { sentence: 'הגישה _____ שלו עזרה לצוות למצוא פתרונות מעשיים.', correctWord: 'פרגמטית', distractors: ['רגשית', 'חלומית', 'אקראית'] },
-    { sentence: 'המנהלת גילתה _____ גדולה כשלקחה את הסיכון הזה.', correctWord: 'תעוזה', distractors: ['פחדנות', 'עייפות', 'שעמום'] },
-    { sentence: 'ה_____ בין שני הצוותים הובילה לתוצאות מרשימות.', correctWord: 'סינרגיה', distractors: ['תחרות', 'מריבה', 'נתק'] },
-    { sentence: 'עלינו לגבש _____ ברורה לפני שנתחיל לפעול.', correctWord: 'אסטרטגיה', distractors: ['תירוץ', 'בדיחה', 'תלונה'] },
-    { sentence: 'השופט חייב להיות _____ ולא להעדיף צד אחד.', correctWord: 'אובייקטיבי', distractors: ['רגשני', 'עצבני', 'משועמם'] },
-    { sentence: 'הילד הזה מראה _____ עצום - הוא יכול להצליח בכל דבר.', correctWord: 'פוטנציאל', distractors: ['כישלון', 'בעיה', 'קושי'] },
-    { sentence: 'חברת ההייטק מאופיינת בסביבת עבודה _____ ומשתנה.', correctWord: 'דינמית', distractors: ['משעממת', 'סטטית', 'שקטה'] },
-    { sentence: 'הוא הוכיח _____ מוסרית כשסירב לשקר למרות הלחץ.', correctWord: 'אינטגריטי', distractors: ['חולשה', 'פחדנות', 'אדישות'] },
-    { sentence: 'צריך _____ כדי להסתגל לשינויים בשוק העבודה.', correctWord: 'גמישות', distractors: ['עקשנות', 'עצלות', 'בורות'] },
-    { sentence: 'כולם הגיעו ל_____ לגבי התוכנית החדשה.', correctWord: 'קונצנזוס', distractors: ['מריבה', 'ויכוח', 'בלבול'] },
-    { sentence: 'המחקר הזה הוא _____ כי הוא מבוסס על ניסויים אמיתיים.', correctWord: 'אמפירי', distractors: ['תיאורטי', 'דמיוני', 'מזויף'] },
-    { sentence: 'ה_____ שלו גרמה לו לא לפסוק ולהמשיך לנסות.', correctWord: 'חוסן', distractors: ['חולשה', 'עייפות', 'אכזבה'] },
-    { sentence: 'היא הצליחה להסביר את הנושא המורכב בצורה _____.', correctWord: 'קוהרנטית', distractors: ['מבלבלת', 'משעממת', 'מסובכת'] },
-    { sentence: 'הוא אדם _____ שתמיד מוכן לעזור לאחרים ללא תמורה.', correctWord: 'אלטרואיסטי', distractors: ['אנוכי', 'אכזרי', 'אדיש'] },
-    { sentence: 'ההחלטה הזו היא _____ בשביל הצלחת הפרויקט.', correctWord: 'קריטית', distractors: ['שולית', 'מיותרת', 'משעממת'] },
-    { sentence: 'היא ביקשה מה_____ שלה עצה לגבי הקריירה.', correctWord: 'מנטור', distractors: ['מתחרה', 'יריב', 'זר'] },
-    { sentence: 'כדאי להסתכל על הבעיה מ_____ אחרת לפני שמחליטים.', correctWord: 'פרספקטיבה', distractors: ['מרחק', 'גובה', 'מהירות'] },
-    { sentence: 'הסיפור שלו נשמע _____ ואמיתי, לא כמו המצאה.', correctWord: 'אותנטי', distractors: ['מזויף', 'משעמם', 'ארוך'] },
-    { sentence: 'ה_____ שלו להצליח דחפה אותו לעבוד קשה יותר.', correctWord: 'אמביציה', distractors: ['עצלות', 'אדישות', 'נחת'] },
-    { sentence: 'ההבדל בין שני הצלילים הוא עניין של _____ עדין.', correctWord: 'ניואנס', distractors: ['צעקה', 'פיצוץ', 'שקט'] },
-    { sentence: 'האירוע הזה שימש כ_____ לשינוי גדול בחברה.', correctWord: 'קטליזטור', distractors: ['מכשול', 'עיכוב', 'בעיה'] },
-    { sentence: 'מערכת היחסים הטובה ביניהם מבוססת על _____.', correctWord: 'הדדיות', distractors: ['שליטה', 'תחרות', 'ניצול'] },
-    { sentence: 'גישה _____ מתייחסת לכל ההיבטים של הבעיה.', correctWord: 'הוליסטית', distractors: ['חלקית', 'שטחית', 'צרה'] },
-    { sentence: 'חשוב לשמור על _____ בין עבודה לחיים אישיים.', correctWord: 'פרופורציה', distractors: ['כאוס', 'בלגן', 'עומס'] },
-    { sentence: 'ה_____ של השוק גורמת למשקיעים לחשוש.', correctWord: 'סטגנציה', distractors: ['שגשוג', 'צמיחה', 'פריחה'] },
-    { sentence: 'הוא למד לבטא את דעתו בצורה _____ אך מכבדת.', correctWord: 'אסרטיבית', distractors: ['ביישנית', 'תוקפנית', 'שתקנית'] },
+    { sentence: 'הוא הביע _____ כלפי ההצעה ולא היה בטוח אם לקבל אותה.', correctWord: 'הסתייגות', distractors: ['התלהבות', 'שמחה', 'הסכמה'], difficulty: 'intermediate' },
+    { sentence: 'הצוות גילה _____ ופעל ליצור את הפרויקט ללא הנחיה.', correctWord: 'יוזמה', distractors: ['עצלות', 'בלבול', 'אדישות'], difficulty: 'beginner' },
+    { sentence: 'חשוב לשמור על _____ כדי שאנשים יוכלו לסמוך עליך.', correctWord: 'אמינות', distractors: ['סודיות', 'עדינות', 'שקט'], difficulty: 'beginner' },
+    { sentence: 'היא עמדה בפני _____ - האם לקבל את המשרה או להישאר עם המשפחה.', correctWord: 'דילמה', distractors: ['הזדמנות', 'חגיגה', 'הפסקה'], difficulty: 'beginner' },
+    { sentence: 'הגישה _____ שלו עזרה לצוות למצוא פתרונות מעשיים.', correctWord: 'פרגמטית', distractors: ['רגשית', 'חלומית', 'אקראית'], difficulty: 'intermediate' },
+    { sentence: 'המנהלת גילתה _____ גדולה כשלקחה את הסיכון הזה.', correctWord: 'תעוזה', distractors: ['פחדנות', 'עייפות', 'שעמום'], difficulty: 'beginner' },
+    { sentence: 'ה_____ בין שני הצוותים הובילה לתוצאות מרשימות.', correctWord: 'סינרגיה', distractors: ['תחרות', 'מריבה', 'נתק'], difficulty: 'intermediate' },
+    { sentence: 'עלינו לגבש _____ ברורה לפני שנתחיל לפעול.', correctWord: 'אסטרטגיה', distractors: ['תירוץ', 'בדיחה', 'תלונה'], difficulty: 'beginner' },
+    { sentence: 'השופט חייב להיות _____ ולא להעדיף צד אחד.', correctWord: 'אובייקטיבי', distractors: ['רגשני', 'עצבני', 'משועמם'], difficulty: 'intermediate' },
+    { sentence: 'הילד הזה מראה _____ עצום - הוא יכול להצליח בכל דבר.', correctWord: 'פוטנציאל', distractors: ['כישלון', 'בעיה', 'קושי'], difficulty: 'beginner' },
+    { sentence: 'חברת ההייטק מאופיינת בסביבת עבודה _____ ומשתנה.', correctWord: 'דינמית', distractors: ['משעממת', 'סטטית', 'שקטה'], difficulty: 'beginner' },
+    { sentence: 'הוא הוכיח _____ מוסרית כשסירב לשקר למרות הלחץ.', correctWord: 'אינטגריטי', distractors: ['חולשה', 'פחדנות', 'אדישות'], difficulty: 'intermediate' },
+    { sentence: 'צריך _____ כדי להסתגל לשינויים בשוק העבודה.', correctWord: 'גמישות', distractors: ['עקשנות', 'עצלות', 'בורות'], difficulty: 'beginner' },
+    { sentence: 'כולם הגיעו ל_____ לגבי התוכנית החדשה.', correctWord: 'קונצנזוס', distractors: ['מריבה', 'ויכוח', 'בלבול'], difficulty: 'intermediate' },
+    { sentence: 'המחקר הזה הוא _____ כי הוא מבוסס על ניסויים אמיתיים.', correctWord: 'אמפירי', distractors: ['תיאורטי', 'דמיוני', 'מזויף'], difficulty: 'intermediate' },
+    { sentence: 'ה_____ שלו גרמה לו לא לפסוק ולהמשיך לנסות.', correctWord: 'חוסן', distractors: ['חולשה', 'עייפות', 'אכזבה'], difficulty: 'beginner' },
+    { sentence: 'היא הצליחה להסביר את הנושא המורכב בצורה _____.', correctWord: 'קוהרנטית', distractors: ['מבלבלת', 'משעממת', 'מסובכת'], difficulty: 'intermediate' },
+    { sentence: 'הוא אדם _____ שתמיד מוכן לעזור לאחרים ללא תמורה.', correctWord: 'אלטרואיסטי', distractors: ['אנוכי', 'אכזרי', 'אדיש'], difficulty: 'intermediate' },
+    { sentence: 'ההחלטה הזו היא _____ בשביל הצלחת הפרויקט.', correctWord: 'קריטית', distractors: ['שולית', 'מיותרת', 'משעממת'], difficulty: 'beginner' },
+    { sentence: 'היא ביקשה מה_____ שלה עצה לגבי הקריירה.', correctWord: 'מנטור', distractors: ['מתחרה', 'יריב', 'זר'], difficulty: 'beginner' },
+    { sentence: 'כדאי להסתכל על הבעיה מ_____ אחרת לפני שמחליטים.', correctWord: 'פרספקטיבה', distractors: ['מרחק', 'גובה', 'מהירות'], difficulty: 'intermediate' },
+    { sentence: 'הסיפור שלו נשמע _____ ואמיתי, לא כמו המצאה.', correctWord: 'אותנטי', distractors: ['מזויף', 'משעמם', 'ארוך'], difficulty: 'beginner' },
+    { sentence: 'ה_____ שלו להצליח דחפה אותו לעבוד קשה יותר.', correctWord: 'אמביציה', distractors: ['עצלות', 'אדישות', 'נחת'], difficulty: 'beginner' },
+    { sentence: 'ההבדל בין שני הצלילים הוא עניין של _____ עדין.', correctWord: 'ניואנס', distractors: ['צעקה', 'פיצוץ', 'שקט'], difficulty: 'intermediate' },
+    { sentence: 'האירוע הזה שימש כ_____ לשינוי גדול בחברה.', correctWord: 'קטליזטור', distractors: ['מכשול', 'עיכוב', 'בעיה'], difficulty: 'intermediate' },
+    { sentence: 'מערכת היחסים הטובה ביניהם מבוססת על _____.', correctWord: 'הדדיות', distractors: ['שליטה', 'תחרות', 'ניצול'], difficulty: 'intermediate' },
+    { sentence: 'גישה _____ מתייחסת לכל ההיבטים של הבעיה.', correctWord: 'הוליסטית', distractors: ['חלקית', 'שטחית', 'צרה'], difficulty: 'intermediate' },
+    { sentence: 'חשוב לשמור על _____ בין עבודה לחיים אישיים.', correctWord: 'פרופורציה', distractors: ['כאוס', 'בלגן', 'עומס'], difficulty: 'beginner' },
+    { sentence: 'ה_____ של השוק גורמת למשקיעים לחשוש.', correctWord: 'סטגנציה', distractors: ['שגשוג', 'צמיחה', 'פריחה'], difficulty: 'intermediate' },
+    { sentence: 'הוא למד לבטא את דעתו בצורה _____ אך מכבדת.', correctWord: 'אסרטיבית', distractors: ['ביישנית', 'תוקפנית', 'שתקנית'], difficulty: 'intermediate' },
   ];
 
   // ---- Hebrew Word Upgrade bank ----
   const UPGRADE_BANK_HE = [
-    { commonWord: 'גדול', acceptedUpgrades: ['עצום', 'אדיר', 'כביר', 'ענק', 'מסיבי'] },
-    { commonWord: 'קטן', acceptedUpgrades: ['זעיר', 'פעוט', 'שולי', 'מזערי', 'דל'] },
-    { commonWord: 'טוב', acceptedUpgrades: ['מצוין', 'מעולה', 'נפלא', 'מושלם', 'מרשים'] },
-    { commonWord: 'רע', acceptedUpgrades: ['גרוע', 'נורא', 'חמור', 'קטסטרופלי', 'הרסני'] },
-    { commonWord: 'חשוב', acceptedUpgrades: ['מכריע', 'חיוני', 'קריטי', 'הכרחי', 'מהותי'] },
-    { commonWord: 'יפה', acceptedUpgrades: ['מהמם', 'מרהיב', 'נהדר', 'מקסים', 'שובה לב'] },
-    { commonWord: 'מהיר', acceptedUpgrades: ['מהיר', 'זריז', 'חטוף', 'בזק', 'מיידי'] },
-    { commonWord: 'איטי', acceptedUpgrades: ['עצלני', 'מתמשך', 'ממושך', 'כבד', 'רפוי'] },
-    { commonWord: 'חכם', acceptedUpgrades: ['נבון', 'חריף', 'מבריק', 'פיקח', 'שנון'] },
-    { commonWord: 'עצוב', acceptedUpgrades: ['עגום', 'קודר', 'מדוכא', 'נכאה', 'מלנכולי'] },
-    { commonWord: 'שמח', acceptedUpgrades: ['מאושר', 'צוהל', 'אופורי', 'מלא חדווה', 'מרונן'] },
-    { commonWord: 'כועס', acceptedUpgrades: ['זועם', 'נסער', 'רותח', 'נזעם', 'מתלקח'] },
-    { commonWord: 'קשה', acceptedUpgrades: ['מאתגר', 'סבוך', 'מורכב', 'עמוס', 'תובעני'] },
-    { commonWord: 'קל', acceptedUpgrades: ['פשוט', 'נוח', 'יסודי', 'בסיסי', 'אלמנטרי'] },
-    { commonWord: 'ישן', acceptedUpgrades: ['עתיק', 'מיושן', 'ארכאי', 'קדום', 'מנוון'] },
-    { commonWord: 'חדש', acceptedUpgrades: ['חדשני', 'חדשי', 'מהפכני', 'פורץ דרך', 'טרי'] },
-    { commonWord: 'חזק', acceptedUpgrades: ['אדיר', 'עוצמתי', 'עז', 'כביר', 'משמעותי'] },
-    { commonWord: 'חלש', acceptedUpgrades: ['רפה', 'שביר', 'פגיע', 'עדין', 'דל'] },
-    { commonWord: 'מפחיד', acceptedUpgrades: ['מאיים', 'מבהיל', 'מחריד', 'מרעיד', 'מבעית'] },
-    { commonWord: 'משעמם', acceptedUpgrades: ['מונוטוני', 'חדגוני', 'תפל', 'מייגע', 'משמים'] },
-    { commonWord: 'מעניין', acceptedUpgrades: ['מרתק', 'סוחף', 'מסקרן', 'שובה לב', 'כובש'] },
-    { commonWord: 'עשיר', acceptedUpgrades: ['אמיד', 'משגשג', 'שופע', 'מבוסס', 'בעל אמצעים'] },
-    { commonWord: 'עני', acceptedUpgrades: ['מרושש', 'חסר כל', 'דל', 'נזקק', 'מחוסר'] },
-    { commonWord: 'אמיתי', acceptedUpgrades: ['אותנטי', 'מקורי', 'כן', 'גנואי', 'אמין'] },
-    { commonWord: 'שקר', acceptedUpgrades: ['כזב', 'מרמה', 'הונאה', 'סילוף', 'זיוף'] },
-    { commonWord: 'רגיל', acceptedUpgrades: ['שגרתי', 'מקובל', 'נורמטיבי', 'שכיח', 'מוכר'] },
-    { commonWord: 'מוזר', acceptedUpgrades: ['מוזר', 'חריג', 'אקסצנטרי', 'תמוה', 'משונה'] },
-    { commonWord: 'ברור', acceptedUpgrades: ['מובן', 'שקוף', 'חד-משמעי', 'מפורש', 'נהיר'] },
-    { commonWord: 'מבלבל', acceptedUpgrades: ['מסובך', 'עמום', 'סתום', 'מורכב', 'מפותל'] },
-    { commonWord: 'נחוש', acceptedUpgrades: ['נחוש', 'עיקש', 'תקיף', 'איתן', 'בלתי מתפשר'] },
+    { commonWord: 'גדול', acceptedUpgrades: ['עצום', 'אדיר', 'כביר', 'ענק', 'מסיבי'], difficulty: 'beginner' },
+    { commonWord: 'קטן', acceptedUpgrades: ['זעיר', 'פעוט', 'שולי', 'מזערי', 'דל'], difficulty: 'beginner' },
+    { commonWord: 'טוב', acceptedUpgrades: ['מצוין', 'מעולה', 'נפלא', 'מושלם', 'מרשים'], difficulty: 'beginner' },
+    { commonWord: 'רע', acceptedUpgrades: ['גרוע', 'נורא', 'חמור', 'קטסטרופלי', 'הרסני'], difficulty: 'beginner' },
+    { commonWord: 'חשוב', acceptedUpgrades: ['מכריע', 'חיוני', 'קריטי', 'הכרחי', 'מהותי'], difficulty: 'beginner' },
+    { commonWord: 'יפה', acceptedUpgrades: ['מהמם', 'מרהיב', 'נהדר', 'מקסים', 'שובה לב'], difficulty: 'beginner' },
+    { commonWord: 'מהיר', acceptedUpgrades: ['מהיר', 'זריז', 'חטוף', 'בזק', 'מיידי'], difficulty: 'beginner' },
+    { commonWord: 'איטי', acceptedUpgrades: ['עצלני', 'מתמשך', 'ממושך', 'כבד', 'רפוי'], difficulty: 'beginner' },
+    { commonWord: 'חכם', acceptedUpgrades: ['נבון', 'חריף', 'מבריק', 'פיקח', 'שנון'], difficulty: 'intermediate' },
+    { commonWord: 'עצוב', acceptedUpgrades: ['עגום', 'קודר', 'מדוכא', 'נכאה', 'מלנכולי'], difficulty: 'beginner' },
+    { commonWord: 'שמח', acceptedUpgrades: ['מאושר', 'צוהל', 'אופורי', 'מלא חדווה', 'מרונן'], difficulty: 'beginner' },
+    { commonWord: 'כועס', acceptedUpgrades: ['זועם', 'נסער', 'רותח', 'נזעם', 'מתלקח'], difficulty: 'intermediate' },
+    { commonWord: 'קשה', acceptedUpgrades: ['מאתגר', 'סבוך', 'מורכב', 'עמוס', 'תובעני'], difficulty: 'beginner' },
+    { commonWord: 'קל', acceptedUpgrades: ['פשוט', 'נוח', 'יסודי', 'בסיסי', 'אלמנטרי'], difficulty: 'beginner' },
+    { commonWord: 'ישן', acceptedUpgrades: ['עתיק', 'מיושן', 'ארכאי', 'קדום', 'מנוון'], difficulty: 'beginner' },
+    { commonWord: 'חדש', acceptedUpgrades: ['חדשני', 'חדשי', 'מהפכני', 'פורץ דרך', 'טרי'], difficulty: 'beginner' },
+    { commonWord: 'חזק', acceptedUpgrades: ['אדיר', 'עוצמתי', 'עז', 'כביר', 'משמעותי'], difficulty: 'beginner' },
+    { commonWord: 'חלש', acceptedUpgrades: ['רפה', 'שביר', 'פגיע', 'עדין', 'דל'], difficulty: 'intermediate' },
+    { commonWord: 'מפחיד', acceptedUpgrades: ['מאיים', 'מבהיל', 'מחריד', 'מרעיד', 'מבעית'], difficulty: 'intermediate' },
+    { commonWord: 'משעמם', acceptedUpgrades: ['מונוטוני', 'חדגוני', 'תפל', 'מייגע', 'משמים'], difficulty: 'intermediate' },
+    { commonWord: 'מעניין', acceptedUpgrades: ['מרתק', 'סוחף', 'מסקרן', 'שובה לב', 'כובש'], difficulty: 'intermediate' },
+    { commonWord: 'עשיר', acceptedUpgrades: ['אמיד', 'משגשג', 'שופע', 'מבוסס', 'בעל אמצעים'], difficulty: 'intermediate' },
+    { commonWord: 'עני', acceptedUpgrades: ['מרושש', 'חסר כל', 'דל', 'נזקק', 'מחוסר'], difficulty: 'intermediate' },
+    { commonWord: 'אמיתי', acceptedUpgrades: ['אותנטי', 'מקורי', 'כן', 'גנואי', 'אמין'], difficulty: 'intermediate' },
+    { commonWord: 'שקר', acceptedUpgrades: ['כזב', 'מרמה', 'הונאה', 'סילוף', 'זיוף'], difficulty: 'intermediate' },
+    { commonWord: 'רגיל', acceptedUpgrades: ['שגרתי', 'מקובל', 'נורמטיבי', 'שכיח', 'מוכר'], difficulty: 'intermediate' },
+    { commonWord: 'מוזר', acceptedUpgrades: ['מוזר', 'חריג', 'אקסצנטרי', 'תמוה', 'משונה'], difficulty: 'intermediate' },
+    { commonWord: 'ברור', acceptedUpgrades: ['מובן', 'שקוף', 'חד-משמעי', 'מפורש', 'נהיר'], difficulty: 'intermediate' },
+    { commonWord: 'מבלבל', acceptedUpgrades: ['מסובך', 'עמום', 'סתום', 'מורכב', 'מפותל'], difficulty: 'intermediate' },
+    { commonWord: 'נחוש', acceptedUpgrades: ['נחוש', 'עיקש', 'תקיף', 'איתן', 'בלתי מתפשר'], difficulty: 'intermediate' },
   ];
 
   // ---- English Sentence Fill bank ----
   const SENTENCE_BANK = [
-    { sentence: 'The report was _____ and got straight to the point without any filler.', correctWord: 'concise', distractors: ['brief', 'short', 'small'] },
-    { sentence: 'Her feedback was very _____ to the topic we were discussing.', correctWord: 'relevant', distractors: ['related', 'important', 'useful'] },
-    { sentence: 'The budget they gave us was _____ for what we needed to complete the project.', correctWord: 'adequate', distractors: ['enough', 'plenty', 'decent'] },
-    { sentence: 'We need a more _____ approach instead of just hoping things work out.', correctWord: 'pragmatic', distractors: ['practical', 'realistic', 'logical'] },
-    { sentence: 'The evidence she presented was extremely _____ and hard to argue against.', correctWord: 'compelling', distractors: ['strong', 'convincing', 'powerful'] },
-    { sentence: 'His instructions were so _____ that nobody had any confusion about what to do.', correctWord: 'explicit', distractors: ['clear', 'obvious', 'simple'] },
-    { sentence: 'The new policy had a _____ effect on employee morale across departments.', correctWord: 'detrimental', distractors: ['harmful', 'negative', 'damaging'] },
-    { sentence: 'She was _____ in her research, checking every source twice.', correctWord: 'meticulous', distractors: ['careful', 'thorough', 'precise'] },
-    { sentence: 'The CEO gave a _____ speech that moved the entire audience.', correctWord: 'eloquent', distractors: ['beautiful', 'powerful', 'moving'] },
-    { sentence: 'The wording of the contract was deliberately _____, leaving room for interpretation.', correctWord: 'ambiguous', distractors: ['vague', 'unclear', 'confusing'] },
-    { sentence: 'Despite repeated setbacks, the team remained _____ and bounced back every time.', correctWord: 'resilient', distractors: ['strong', 'tough', 'determined'] },
-    { sentence: 'The success of this project is _____ on getting approval from the board first.', correctWord: 'contingent', distractors: ['dependent', 'reliant', 'based'] },
-    { sentence: 'The quiet library environment is very _____ to focused study.', correctWord: 'conducive', distractors: ['helpful', 'good', 'suitable'] },
-    { sentence: 'We saw _____ growth in revenue compared to last quarter.', correctWord: 'substantial', distractors: ['big', 'large', 'major'] },
-    { sentence: 'His _____ work ethic is the main reason he got promoted so quickly.', correctWord: 'diligent', distractors: ['hard', 'strong', 'dedicated'] },
-    { sentence: 'The plan is _____ if we can secure the funding by next month.', correctWord: 'feasible', distractors: ['possible', 'doable', 'achievable'] },
-    { sentence: 'She offered a _____ perspective that changed how we viewed the whole problem.', correctWord: 'profound', distractors: ['deep', 'interesting', 'unique'] },
-    { sentence: 'Misinformation on social media has become increasingly _____ in recent years.', correctWord: 'prevalent', distractors: ['common', 'widespread', 'frequent'] },
-    { sentence: 'The manager tried to _____ the conflict between the two departments.', correctWord: 'mitigate', distractors: ['reduce', 'solve', 'handle'] },
-    { sentence: 'After the scandal, the company had to _____ its damaged public image.', correctWord: 'restore', distractors: ['fix', 'rebuild', 'repair'] },
-    { sentence: 'The data shows a clear _____ between the two sets of numbers.', correctWord: 'discrepancy', distractors: ['difference', 'gap', 'mismatch'] },
-    { sentence: 'It would be _____ to invest everything in a single stock.', correctWord: 'imprudent', distractors: ['stupid', 'risky', 'dangerous'] },
-    { sentence: 'The new software will _____ collaboration between remote teams.', correctWord: 'facilitate', distractors: ['improve', 'help', 'enable'] },
-    { sentence: 'He remained _____ about the project even when others lost faith.', correctWord: 'optimistic', distractors: ['hopeful', 'positive', 'confident'] },
-    { sentence: 'The results were _____ evidence that the new method actually works.', correctWord: 'tangible', distractors: ['solid', 'real', 'clear'] },
-    { sentence: 'Her _____ nature means she can handle any role the company needs.', correctWord: 'versatile', distractors: ['flexible', 'adaptable', 'capable'] },
-    { sentence: 'The committee reached a _____ decision after three hours of debate.', correctWord: 'unanimous', distractors: ['final', 'complete', 'joint'] },
-    { sentence: 'Trying to change his mind at this point would be _____.', correctWord: 'futile', distractors: ['useless', 'pointless', 'wasteful'] },
-    { sentence: 'The judge must remain _____ throughout the entire trial.', correctWord: 'impartial', distractors: ['fair', 'neutral', 'balanced'] },
-    { sentence: 'The changes she proposed were _____ but could transform the company.', correctWord: 'bold', distractors: ['brave', 'daring', 'risky'] },
+    { sentence: 'The report was _____ and got straight to the point without any filler.', correctWord: 'concise', distractors: ['brief', 'short', 'small'], difficulty: 'beginner' },
+    { sentence: 'Her feedback was very _____ to the topic we were discussing.', correctWord: 'relevant', distractors: ['related', 'important', 'useful'], difficulty: 'beginner' },
+    { sentence: 'The budget they gave us was _____ for what we needed to complete the project.', correctWord: 'adequate', distractors: ['enough', 'plenty', 'decent'], difficulty: 'beginner' },
+    { sentence: 'We need a more _____ approach instead of just hoping things work out.', correctWord: 'pragmatic', distractors: ['practical', 'realistic', 'logical'], difficulty: 'beginner' },
+    { sentence: 'The evidence she presented was extremely _____ and hard to argue against.', correctWord: 'compelling', distractors: ['strong', 'convincing', 'powerful'], difficulty: 'intermediate' },
+    { sentence: 'His instructions were so _____ that nobody had any confusion about what to do.', correctWord: 'explicit', distractors: ['clear', 'obvious', 'simple'], difficulty: 'intermediate' },
+    { sentence: 'The new policy had a _____ effect on employee morale across departments.', correctWord: 'detrimental', distractors: ['harmful', 'negative', 'damaging'], difficulty: 'intermediate' },
+    { sentence: 'She was _____ in her research, checking every source twice.', correctWord: 'meticulous', distractors: ['careful', 'thorough', 'precise'], difficulty: 'beginner' },
+    { sentence: 'The CEO gave a _____ speech that moved the entire audience.', correctWord: 'eloquent', distractors: ['beautiful', 'powerful', 'moving'], difficulty: 'intermediate' },
+    { sentence: 'The wording of the contract was deliberately _____, leaving room for interpretation.', correctWord: 'ambiguous', distractors: ['vague', 'unclear', 'confusing'], difficulty: 'intermediate' },
+    { sentence: 'Despite repeated setbacks, the team remained _____ and bounced back every time.', correctWord: 'resilient', distractors: ['strong', 'tough', 'determined'], difficulty: 'beginner' },
+    { sentence: 'The success of this project is _____ on getting approval from the board first.', correctWord: 'contingent', distractors: ['dependent', 'reliant', 'based'], difficulty: 'intermediate' },
+    { sentence: 'The quiet library environment is very _____ to focused study.', correctWord: 'conducive', distractors: ['helpful', 'good', 'suitable'], difficulty: 'intermediate' },
+    { sentence: 'We saw _____ growth in revenue compared to last quarter.', correctWord: 'substantial', distractors: ['big', 'large', 'major'], difficulty: 'beginner' },
+    { sentence: 'His _____ work ethic is the main reason he got promoted so quickly.', correctWord: 'diligent', distractors: ['hard', 'strong', 'dedicated'], difficulty: 'beginner' },
+    { sentence: 'The plan is _____ if we can secure the funding by next month.', correctWord: 'feasible', distractors: ['possible', 'doable', 'achievable'], difficulty: 'intermediate' },
+    { sentence: 'She offered a _____ perspective that changed how we viewed the whole problem.', correctWord: 'profound', distractors: ['deep', 'interesting', 'unique'], difficulty: 'intermediate' },
+    { sentence: 'Misinformation on social media has become increasingly _____ in recent years.', correctWord: 'prevalent', distractors: ['common', 'widespread', 'frequent'], difficulty: 'intermediate' },
+    { sentence: 'The manager tried to _____ the conflict between the two departments.', correctWord: 'mitigate', distractors: ['reduce', 'solve', 'handle'], difficulty: 'intermediate' },
+    { sentence: 'After the scandal, the company had to _____ its damaged public image.', correctWord: 'restore', distractors: ['fix', 'rebuild', 'repair'], difficulty: 'beginner' },
+    { sentence: 'The data shows a clear _____ between the two sets of numbers.', correctWord: 'discrepancy', distractors: ['difference', 'gap', 'mismatch'], difficulty: 'intermediate' },
+    { sentence: 'It would be _____ to invest everything in a single stock.', correctWord: 'imprudent', distractors: ['stupid', 'risky', 'dangerous'], difficulty: 'intermediate' },
+    { sentence: 'The new software will _____ collaboration between remote teams.', correctWord: 'facilitate', distractors: ['improve', 'help', 'enable'], difficulty: 'beginner' },
+    { sentence: 'He remained _____ about the project even when others lost faith.', correctWord: 'optimistic', distractors: ['hopeful', 'positive', 'confident'], difficulty: 'beginner' },
+    { sentence: 'The results were _____ evidence that the new method actually works.', correctWord: 'tangible', distractors: ['solid', 'real', 'clear'], difficulty: 'intermediate' },
+    { sentence: 'Her _____ nature means she can handle any role the company needs.', correctWord: 'versatile', distractors: ['flexible', 'adaptable', 'capable'], difficulty: 'beginner' },
+    { sentence: 'The committee reached a _____ decision after three hours of debate.', correctWord: 'unanimous', distractors: ['final', 'complete', 'joint'], difficulty: 'intermediate' },
+    { sentence: 'Trying to change his mind at this point would be _____.', correctWord: 'futile', distractors: ['useless', 'pointless', 'wasteful'], difficulty: 'intermediate' },
+    { sentence: 'The judge must remain _____ throughout the entire trial.', correctWord: 'impartial', distractors: ['fair', 'neutral', 'balanced'], difficulty: 'intermediate' },
+    { sentence: 'The changes she proposed were _____ but could transform the company.', correctWord: 'bold', distractors: ['brave', 'daring', 'risky'], difficulty: 'beginner' },
   ];
 
   // ---- English Word Upgrade bank ----
   const UPGRADE_BANK = [
-    { commonWord: 'enough', acceptedUpgrades: ['sufficient', 'adequate', 'ample'] },
-    { commonWord: 'important', acceptedUpgrades: ['significant', 'crucial', 'essential', 'vital', 'paramount', 'pivotal'] },
-    { commonWord: 'big', acceptedUpgrades: ['substantial', 'considerable', 'significant', 'immense'] },
-    { commonWord: 'small', acceptedUpgrades: ['minimal', 'negligible', 'marginal', 'trivial', 'modest'] },
-    { commonWord: 'good', acceptedUpgrades: ['excellent', 'exceptional', 'superb', 'commendable', 'exemplary', 'outstanding'] },
-    { commonWord: 'bad', acceptedUpgrades: ['detrimental', 'adverse', 'harmful', 'unfavorable', 'deplorable'] },
-    { commonWord: 'clear', acceptedUpgrades: ['explicit', 'lucid', 'coherent', 'transparent', 'unambiguous'] },
-    { commonWord: 'confusing', acceptedUpgrades: ['ambiguous', 'perplexing', 'convoluted', 'bewildering'] },
-    { commonWord: 'careful', acceptedUpgrades: ['meticulous', 'diligent', 'thorough', 'prudent', 'scrupulous'] },
-    { commonWord: 'useful', acceptedUpgrades: ['beneficial', 'advantageous', 'valuable', 'instrumental'] },
-    { commonWord: 'hard', acceptedUpgrades: ['arduous', 'strenuous', 'formidable', 'demanding', 'rigorous'] },
-    { commonWord: 'easy', acceptedUpgrades: ['effortless', 'straightforward', 'feasible', 'manageable'] },
-    { commonWord: 'fast', acceptedUpgrades: ['expeditious', 'swift', 'rapid', 'prompt'] },
-    { commonWord: 'slow', acceptedUpgrades: ['sluggish', 'lethargic', 'gradual', 'deliberate'] },
-    { commonWord: 'angry', acceptedUpgrades: ['furious', 'irate', 'indignant', 'livid', 'incensed'] },
-    { commonWord: 'happy', acceptedUpgrades: ['elated', 'jubilant', 'ecstatic', 'euphoric', 'delighted'] },
-    { commonWord: 'sad', acceptedUpgrades: ['melancholy', 'somber', 'despondent', 'dismal', 'gloomy'] },
-    { commonWord: 'old', acceptedUpgrades: ['antiquated', 'obsolete', 'archaic', 'outdated'] },
-    { commonWord: 'new', acceptedUpgrades: ['novel', 'innovative', 'contemporary', 'cutting-edge', 'unprecedented'] },
-    { commonWord: 'smart', acceptedUpgrades: ['astute', 'shrewd', 'perceptive', 'discerning', 'insightful'] },
-    { commonWord: 'strong', acceptedUpgrades: ['robust', 'resilient', 'formidable', 'tenacious'] },
-    { commonWord: 'weak', acceptedUpgrades: ['fragile', 'vulnerable', 'feeble', 'precarious'] },
-    { commonWord: 'likely', acceptedUpgrades: ['probable', 'plausible', 'feasible', 'conceivable'] },
-    { commonWord: 'unlikely', acceptedUpgrades: ['improbable', 'implausible', 'dubious', 'remote'] },
-    { commonWord: 'normal', acceptedUpgrades: ['conventional', 'typical', 'standard', 'customary', 'mundane'] },
-    { commonWord: 'strange', acceptedUpgrades: ['peculiar', 'anomalous', 'unconventional', 'irregular'] },
-    { commonWord: 'rich', acceptedUpgrades: ['affluent', 'prosperous', 'opulent', 'abundant'] },
-    { commonWord: 'poor', acceptedUpgrades: ['impoverished', 'destitute', 'meager', 'scarce'] },
-    { commonWord: 'short', acceptedUpgrades: ['concise', 'brief', 'succinct', 'compact'] },
-    { commonWord: 'boring', acceptedUpgrades: ['mundane', 'monotonous', 'tedious', 'stale'] },
+    { commonWord: 'enough', acceptedUpgrades: ['sufficient', 'adequate', 'ample'], difficulty: 'beginner' },
+    { commonWord: 'important', acceptedUpgrades: ['significant', 'crucial', 'essential', 'vital', 'paramount', 'pivotal'], difficulty: 'beginner' },
+    { commonWord: 'big', acceptedUpgrades: ['substantial', 'considerable', 'significant', 'immense'], difficulty: 'beginner' },
+    { commonWord: 'small', acceptedUpgrades: ['minimal', 'negligible', 'marginal', 'trivial', 'modest'], difficulty: 'beginner' },
+    { commonWord: 'good', acceptedUpgrades: ['excellent', 'exceptional', 'superb', 'commendable', 'exemplary', 'outstanding'], difficulty: 'beginner' },
+    { commonWord: 'bad', acceptedUpgrades: ['detrimental', 'adverse', 'harmful', 'unfavorable', 'deplorable'], difficulty: 'beginner' },
+    { commonWord: 'clear', acceptedUpgrades: ['explicit', 'lucid', 'coherent', 'transparent', 'unambiguous'], difficulty: 'intermediate' },
+    { commonWord: 'confusing', acceptedUpgrades: ['ambiguous', 'perplexing', 'convoluted', 'bewildering'], difficulty: 'intermediate' },
+    { commonWord: 'careful', acceptedUpgrades: ['meticulous', 'diligent', 'thorough', 'prudent', 'scrupulous'], difficulty: 'intermediate' },
+    { commonWord: 'useful', acceptedUpgrades: ['beneficial', 'advantageous', 'valuable', 'instrumental'], difficulty: 'intermediate' },
+    { commonWord: 'hard', acceptedUpgrades: ['arduous', 'strenuous', 'formidable', 'demanding', 'rigorous'], difficulty: 'beginner' },
+    { commonWord: 'easy', acceptedUpgrades: ['effortless', 'straightforward', 'feasible', 'manageable'], difficulty: 'beginner' },
+    { commonWord: 'fast', acceptedUpgrades: ['expeditious', 'swift', 'rapid', 'prompt'], difficulty: 'beginner' },
+    { commonWord: 'slow', acceptedUpgrades: ['sluggish', 'lethargic', 'gradual', 'deliberate'], difficulty: 'beginner' },
+    { commonWord: 'angry', acceptedUpgrades: ['furious', 'irate', 'indignant', 'livid', 'incensed'], difficulty: 'intermediate' },
+    { commonWord: 'happy', acceptedUpgrades: ['elated', 'jubilant', 'ecstatic', 'euphoric', 'delighted'], difficulty: 'beginner' },
+    { commonWord: 'sad', acceptedUpgrades: ['melancholy', 'somber', 'despondent', 'dismal', 'gloomy'], difficulty: 'beginner' },
+    { commonWord: 'old', acceptedUpgrades: ['antiquated', 'obsolete', 'archaic', 'outdated'], difficulty: 'beginner' },
+    { commonWord: 'new', acceptedUpgrades: ['novel', 'innovative', 'contemporary', 'cutting-edge', 'unprecedented'], difficulty: 'beginner' },
+    { commonWord: 'smart', acceptedUpgrades: ['astute', 'shrewd', 'perceptive', 'discerning', 'insightful'], difficulty: 'intermediate' },
+    { commonWord: 'strong', acceptedUpgrades: ['robust', 'resilient', 'formidable', 'tenacious'], difficulty: 'beginner' },
+    { commonWord: 'weak', acceptedUpgrades: ['fragile', 'vulnerable', 'feeble', 'precarious'], difficulty: 'intermediate' },
+    { commonWord: 'likely', acceptedUpgrades: ['probable', 'plausible', 'feasible', 'conceivable'], difficulty: 'intermediate' },
+    { commonWord: 'unlikely', acceptedUpgrades: ['improbable', 'implausible', 'dubious', 'remote'], difficulty: 'intermediate' },
+    { commonWord: 'normal', acceptedUpgrades: ['conventional', 'typical', 'standard', 'customary', 'mundane'], difficulty: 'intermediate' },
+    { commonWord: 'strange', acceptedUpgrades: ['peculiar', 'anomalous', 'unconventional', 'irregular'], difficulty: 'intermediate' },
+    { commonWord: 'rich', acceptedUpgrades: ['affluent', 'prosperous', 'opulent', 'abundant'], difficulty: 'intermediate' },
+    { commonWord: 'poor', acceptedUpgrades: ['impoverished', 'destitute', 'meager', 'scarce'], difficulty: 'intermediate' },
+    { commonWord: 'short', acceptedUpgrades: ['concise', 'brief', 'succinct', 'compact'], difficulty: 'beginner' },
+    { commonWord: 'boring', acceptedUpgrades: ['mundane', 'monotonous', 'tedious', 'stale'], difficulty: 'intermediate' },
   ];
 
   // ---- Cache & state ----
@@ -386,6 +386,27 @@ Return a JSON array of ${count} objects in this exact format. Only output the JS
     return _getLang() === 'he' ? UPGRADE_BANK_HE : UPGRADE_BANK;
   }
 
+  // ---- Difficulty filtering helpers ----
+  // Maps numeric difficulty (1-5) to allowed bank difficulty tags
+  function _getAllowedDifficulties(numericLevel) {
+    if (numericLevel <= 2) return ['beginner'];
+    if (numericLevel >= 4) return ['intermediate'];
+    return ['beginner', 'intermediate']; // level 3 = all
+  }
+
+  function _getCurrentDifficulty() {
+    const settings = RR.Storage.getSettings();
+    return settings.difficulty || 3;
+  }
+
+  // Filters any bank array by difficulty, with fallback to full bank
+  function _filterByDifficulty(bank, numericLevel) {
+    const allowed = _getAllowedDifficulties(numericLevel);
+    const filtered = bank.filter(e => allowed.includes(e.difficulty));
+    // Safety: if filtering yields fewer than 5 entries, use full bank
+    return filtered.length >= 5 ? filtered : bank;
+  }
+
   function _filterDefinitionBank(difficulty, category) {
     let words = [..._getDefinitionBank()];
 
@@ -423,7 +444,8 @@ Return a JSON array of ${count} objects in this exact format. Only output the JS
 
   // ---- Definition Match helpers ----
   function getDefinitionChallenge() {
-    const bank = _getDefinitionBank();
+    const level = _getCurrentDifficulty();
+    const bank = _filterByDifficulty(_getDefinitionBank(), level);
     if (usedIndices.size >= bank.length) usedIndices.clear();
 
     let idx;
@@ -449,7 +471,8 @@ Return a JSON array of ${count} objects in this exact format. Only output the JS
 
   // ---- Sentence Fill helpers ----
   function getSentenceChallenge() {
-    const bank = _getSentenceBank();
+    const level = _getCurrentDifficulty();
+    const bank = _filterByDifficulty(_getSentenceBank(), level);
     if (usedSentenceIndices.size >= bank.length) usedSentenceIndices.clear();
 
     let idx;
@@ -470,7 +493,8 @@ Return a JSON array of ${count} objects in this exact format. Only output the JS
 
   // ---- Recall Challenge helpers ----
   function getRecallChallenge() {
-    const bank = _getDefinitionBank();
+    const level = _getCurrentDifficulty();
+    const bank = _filterByDifficulty(_getDefinitionBank(), level);
     const idx = Math.floor(Math.random() * bank.length);
     return {
       word: bank[idx].word,
@@ -480,7 +504,8 @@ Return a JSON array of ${count} objects in this exact format. Only output the JS
 
   // ---- Word Upgrade helpers ----
   function getUpgradeChallenge() {
-    const bank = _getUpgradeBank();
+    const level = _getCurrentDifficulty();
+    const bank = _filterByDifficulty(_getUpgradeBank(), level);
     if (usedUpgradeIndices.size >= bank.length) usedUpgradeIndices.clear();
 
     let idx;
