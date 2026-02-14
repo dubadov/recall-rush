@@ -46,7 +46,7 @@ RR.App = (function () {
       showScreen('setup');
     }
 
-    _bindEvents();
+    try { _bindEvents(); } catch (e) { console.error('App: _bindEvents error', e); }
     _initSpeech();
   }
 
@@ -166,14 +166,72 @@ RR.App = (function () {
     });
 
     // Settings auto-save on change
-    ['setting-timer', 'setting-difficulty', 'setting-category'].forEach(id => {
-      $(id).addEventListener('change', _saveSettingsFromUI);
+    ['setting-difficulty', 'setting-category'].forEach(id => {
+      const el = $(id);
+      if (el) el.addEventListener('change', _saveSettingsFromUI);
+    });
+
+    // Difficulty selector buttons
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const level = parseInt(btn.dataset.level);
+        _setDifficulty(level);
+      });
     });
 
     // Daily challenge
     $('start-daily').addEventListener('click', () => {
       _onModeSelect('definition-match');
     });
+  }
+
+  // ---- Difficulty Selector ----
+  function _setDifficulty(level) {
+    if (level < 1 || level > 5) return;
+
+    // Save to storage
+    RR.Storage.set('difficulty', level);
+
+    // Update button active states
+    document.querySelectorAll('.diff-btn').forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.level) === level);
+    });
+
+    // Update header text
+    const nameEl = $('diff-level-name');
+    if (nameEl) nameEl.textContent = RR.i18n.t('diffName' + level);
+
+    // Update info text
+    const infoEl = $('diff-info');
+    if (infoEl) infoEl.textContent = RR.i18n.t('diffInfo' + level);
+
+    // Also sync the settings dropdown if visible
+    const settingSelect = $('setting-difficulty');
+    if (settingSelect) settingSelect.value = level;
+
+    // Clear cached vocabulary so difficulty filter takes effect
+    RR.Storage.set('cachedVocabulary', []);
+  }
+
+  function _loadDifficultyUI() {
+    const settings = RR.Storage.getSettings();
+    const level = settings.difficulty || 3;
+
+    // Set active button
+    document.querySelectorAll('.diff-btn').forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.level) === level);
+    });
+
+    // Set header and info text
+    const nameEl = $('diff-level-name');
+    if (nameEl) nameEl.textContent = RR.i18n.t('diffName' + level);
+
+    const infoEl = $('diff-info');
+    if (infoEl) infoEl.textContent = RR.i18n.t('diffInfo' + level);
+
+    // Set label
+    const labelEl = document.querySelector('.diff-label');
+    if (labelEl) labelEl.textContent = RR.i18n.t('diffLabel');
   }
 
   // ---- Language Toggle ----
@@ -184,6 +242,9 @@ RR.App = (function () {
 
     // Clear cached vocabulary when switching language so correct bank is used
     RR.Storage.set('cachedVocabulary', []);
+
+    // Refresh difficulty UI text for the new language
+    _loadDifficultyUI();
   }
 
   // ---- Setup ----
@@ -317,6 +378,9 @@ RR.App = (function () {
     _setBest('best-sentence-fill', bestScores['sentence-fill']);
     _setBest('best-recall-challenge', bestScores['recall-challenge']);
     _setBest('best-word-upgrade', bestScores['word-upgrade']);
+
+    // Sync difficulty UI with saved setting
+    _loadDifficultyUI();
   }
 
   function _setBest(elementId, score) {
@@ -361,7 +425,6 @@ RR.App = (function () {
   // ---- Settings ----
   function _loadSettings() {
     const settings = RR.Storage.getSettings();
-    $('setting-timer').value = settings.timerDuration;
     $('setting-difficulty').value = settings.difficulty;
     $('setting-category').value = settings.category;
     $('settings-api-key').value = settings.apiKey || '';
@@ -369,8 +432,7 @@ RR.App = (function () {
 
   function _saveSettingsFromUI() {
     RR.Storage.saveSettings({
-      timerDuration: parseInt($('setting-timer').value),
-      difficulty: $('setting-difficulty').value,
+      difficulty: parseInt($('setting-difficulty').value),
       category: $('setting-category').value,
     });
   }

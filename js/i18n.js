@@ -84,6 +84,19 @@ RR.i18n = (function () {
       settingsDataTitle: 'Data',
       resetAllProgress: 'Reset All Progress',
 
+      // ---- Difficulty levels ----
+      diffName1: 'Beginner',
+      diffName2: 'Easy',
+      diffName3: 'Medium',
+      diffName4: 'Hard',
+      diffName5: 'Master',
+      diffInfo1: 'Basic words \u2022 15s timer',
+      diffInfo2: 'Simple words \u2022 12s timer',
+      diffInfo3: 'Balanced words \u2022 10s timer',
+      diffInfo4: 'Advanced words \u2022 8s timer',
+      diffInfo5: 'Expert words \u2022 6s timer',
+      diffLabel: 'Difficulty',
+
       // ---- Dynamic JS strings ----
       countdown_go: 'GO!',
       confirmReset: 'Are you sure? This will reset all your progress, XP, and statistics.',
@@ -196,6 +209,19 @@ RR.i18n = (function () {
       saveKey: 'שמור מפתח',
       settingsDataTitle: 'נתונים',
       resetAllProgress: 'אפס את כל ההתקדמות',
+
+      // ---- Difficulty levels ----
+      diffName1: 'מתחיל',
+      diffName2: 'קל',
+      diffName3: 'בינוני',
+      diffName4: 'קשה',
+      diffName5: 'מומחה',
+      diffInfo1: 'מילים בסיסיות \u2022 15 שניות',
+      diffInfo2: 'מילים פשוטות \u2022 12 שניות',
+      diffInfo3: 'מילים מאוזנות \u2022 10 שניות',
+      diffInfo4: 'מילים מתקדמות \u2022 8 שניות',
+      diffInfo5: 'מילים ברמת מומחה \u2022 6 שניות',
+      diffLabel: 'קושי',
 
       // ---- Dynamic JS strings ----
       countdown_go: '!קדימה',

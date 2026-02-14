@@ -69,6 +69,9 @@ RR.Storage = (function () {
     }
   }
 
+  // Difficulty level → timer duration (seconds)
+  const DIFFICULTY_TIMER = { 1: 15, 2: 12, 3: 10, 4: 8, 5: 6 };
+
   // Backward-compat: map old string difficulty to numeric 1-5
   const _DIFF_MAP = { beginner: 1, intermediate: 3, advanced: 4, expert: 5 };
 
@@ -84,9 +87,11 @@ RR.Storage = (function () {
 
   // Get settings as an object
   function getSettings() {
+    const diff = _migrateDifficulty(get('difficulty'));
     return {
       apiKey: get('apiKey'),
-      difficulty: _migrateDifficulty(get('difficulty')),
+      difficulty: diff,
+      timerDuration: DIFFICULTY_TIMER[diff] || 10,
       category: get('category'),
       speechEngine: get('speechEngine'),
     };
@@ -108,5 +113,6 @@ RR.Storage = (function () {
     getSettings,
     saveSettings,
     DEFAULTS,
+    DIFFICULTY_TIMER,
   };
 })();
